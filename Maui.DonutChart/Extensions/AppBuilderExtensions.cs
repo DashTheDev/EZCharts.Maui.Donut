@@ -1,9 +1,11 @@
-﻿namespace Maui.DonutChart;
+﻿using SkiaSharp.Views.Maui.Controls.Hosting;
+
+namespace Maui.DonutChart;
 
 public static class AppBuilderExtensions
 {
     public static MauiAppBuilder UseDonutChart(this MauiAppBuilder builder)
     {
-        return builder;
+        return builder.UseSkiaSharp();
     }
 }

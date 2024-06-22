@@ -2,8 +2,16 @@
 <ContentPage
     x:Class="Maui.DonutChart.Samples.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:donut="http://schemas.dashthedev.com/maui/donut-chart">
 
-    <Label Text="Hello world!" />
+    <donut:DonutChartView
+        BackgroundColor="Red"
+        HeightRequest="500"
+        WidthRequest="500">
+        <donut:DataEntry Value="200" />
+        <donut:DataEntry Value="300" />
+        <donut:DataEntry Value="432" />
+    </donut:DonutChartView>
 
 </ContentPage>

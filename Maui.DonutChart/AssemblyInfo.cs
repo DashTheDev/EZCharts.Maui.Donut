@@ -1,4 +1,5 @@
-﻿[assembly: XmlnsDefinition(XamlConstants.XamlNamespace, XamlConstants.Namespace)]
+﻿[assembly: XmlnsDefinition(XamlConstants.XamlNamespace, XamlConstants.NamespacePrefix + nameof(Maui.DonutChart.Controls))]
+[assembly: XmlnsDefinition(XamlConstants.XamlNamespace, XamlConstants.Namespace)]
 
 [assembly: Microsoft.Maui.Controls.XmlnsPrefix(XamlConstants.XamlNamespace, "donut")]
 
