@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\common.props" />
+
+	<PropertyGroup>
+		<Title>Maui.DonutChart</Title>
+		<PackageId>Maui.DonutChart</PackageId>
+		<Version>0.0.1</Version>
+		<RepositoryUrl>https://github.com/DashTheDev/Maui.DonutChart</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/DashTheDev/Maui.DonutChart</PackageProjectUrl>
+		<PackageTags>donut,chart,data,.net,maui,cross-platform,windows,ios,android</PackageTags>
+		<NeutralLanguage>en-AU</NeutralLanguage>
+		<Authors>DashTheDev</Authors>
+		<Description>A .NET Maui control library that renders donut charts.</Description>
+		<PackageReleaseNotes>Changelog can be found on GitHub.</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<!-- Android -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+		<Compile Remove="**\*.Android.cs" />
+		<None Include="**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<!-- iOS -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
+		<Compile Remove="**\*.iOS.cs" />
+		<None Include="**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<!-- Windows -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
+		<Compile Remove="**\*.Windows.cs" />
+		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Controls\" />
+	  <Folder Include="Handlers\" />
+	</ItemGroup>
+
+</Project>
