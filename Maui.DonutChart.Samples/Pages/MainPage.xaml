@@ -5,13 +5,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:donut="http://schemas.dashthedev.com/maui/donut-chart">
 
-    <donut:DonutChartView
-        BackgroundColor="Red"
-        HeightRequest="500"
-        WidthRequest="500">
-        <donut:DataEntry Value="200" />
-        <donut:DataEntry Value="300" />
-        <donut:DataEntry Value="432" />
-    </donut:DonutChartView>
+    <Grid RowDefinitions="50,*">
+        <Label x:Name="ClickedLabel" Text="Nothing clicked" />
+
+        <donut:DonutChartView
+            Grid.Row="1"
+            BackgroundColor="Red"
+            HeightRequest="500"
+            WidthRequest="500">
+            <donut:DataEntry Clicked="OnEntryClicked" Value="200" />
+            <donut:DataEntry Clicked="OnEntryClicked" Value="400" />
+            <donut:DataEntry Clicked="OnEntryClicked" Value="300" />
+            <donut:DataEntry Clicked="OnEntryClicked" Value="432" />
+        </donut:DonutChartView>
+    </Grid>
 
 </ContentPage>

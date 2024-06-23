@@ -1,7 +1,13 @@
-﻿namespace Maui.DonutChart.Controls;
+﻿using SkiaSharp;
+
+namespace Maui.DonutChart.Controls;
 
 public class DataEntry : Element
 {
+    internal SKPath? Path;
+
+    public event EventHandler? Clicked;
+
     public static readonly BindableProperty ValueProperty = BindableProperty.Create(
         nameof(Value),
         typeof(float),
@@ -22,5 +28,10 @@ public class DataEntry : Element
     {
         get => (string)GetValue(CaptionProperty);
         set => SetValue(CaptionProperty, value);
+    }
+
+    internal void InvokeClicked()
+    {
+        Clicked?.Invoke(this, EventArgs.Empty);
     }
 }

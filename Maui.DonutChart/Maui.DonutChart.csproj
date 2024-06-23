@@ -39,13 +39,13 @@
 		<Compile Remove="**\*.Windows.cs" />
 		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	  <Folder Include="Handlers\" />
+		<Folder Include="Handlers\" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
 	</ItemGroup>
-	
+
 </Project>

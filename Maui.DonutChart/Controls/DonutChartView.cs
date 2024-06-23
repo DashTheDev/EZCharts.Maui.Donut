@@ -1,5 +1,6 @@
 ﻿using Maui.DonutChart.Helpers;
 using SkiaSharp;
+using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
 namespace Maui.DonutChart.Controls;
@@ -11,6 +12,7 @@ public class DonutChartView : SKCanvasView
 
     public DonutChartView()
     {
+        EnableTouchEvents = true;
         PaintSurface += OnPaintSurface;
     }
 
@@ -41,6 +43,24 @@ public class DonutChartView : SKCanvasView
         RenderChart(e.Surface.Canvas, e.Info.Width, e.Info.Height);
     }
 
+    protected override void OnTouch(SKTouchEventArgs e)
+    {
+        base.OnTouch(e);
+
+        if (e.ActionType != SKTouchAction.Pressed)
+        {
+            return;
+        }
+
+        foreach (DataEntry entry in Entries)
+        {
+            if (entry.Path is not null && entry.Path.Contains(e.Location.X, e.Location.Y))
+            {
+                entry.InvokeClicked();
+            }
+        }
+    }
+
     private void RenderChart(SKCanvas canvas, int width, int height)
     {
         _bounds = new SKRect(0, 0, width, height);
@@ -60,30 +80,24 @@ public class DonutChartView : SKCanvasView
             return;
         }
 
-        SKSize padding = new(25, 25);
-        SKRect innerRect = new()
-        {
-            Size = _bounds.Size - padding,
-            Location = new(_bounds.Left + (padding.Width / 2), _bounds.Top + (padding.Height / 2))
-        };
-
         int colorIndex = 0;
         int maxColorIndex = ColorConstants.DefaultChartColors.Length - 1;
-        float totalValue = Entries.Sum(a => Math.Abs(a.Value));
-        float startAngle = -90;
+        float totalValue = Entries.Sum(a => a.Value);
+        float percentageFilled = 0.0f;
+
+        canvas.Translate(_bounds.Width / 2, _bounds.Height / 2);
 
         foreach (DataEntry entry in Entries)
         {
-            SKPaint paint = SKPaints.Stroke(ColorConstants.DefaultChartColors[colorIndex], 5);
+            SKPaint paint = SKPaints.Fill(ColorConstants.DefaultChartColors[colorIndex]);
 
-            float valuePercentage = entry.Value / totalValue;
-            float endAngle = startAngle + CircleConstants.Degrees * valuePercentage;
+            float percentageToFill = entry.Value / totalValue;
+            float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            SKPath path = new();
-            path.AddArc(innerRect, startAngle, endAngle - startAngle);
-            canvas.DrawPath(path, paint);
+            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, 100, 50);
+            canvas.DrawPath(entry.Path, paint);
 
-            startAngle = endAngle;
+            percentageFilled = targetPercentageFilled;
             colorIndex++;
 
             if (colorIndex >= maxColorIndex)
