@@ -94,7 +94,7 @@ public class DonutChartView : SKCanvasView
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, 100, 50);
+            entry.Path = SKGeometry.CreateSectorPath(_bounds, percentageFilled, targetPercentageFilled);
             canvas.DrawPath(entry.Path, paint);
 
             percentageFilled = targetPercentageFilled;

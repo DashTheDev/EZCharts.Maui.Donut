@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Maui.DonutChart.Controls;
+using SkiaSharp;
 
 namespace Maui.DonutChart.Helpers;
 
@@ -14,62 +15,32 @@ public static class SKGeometry
         return new SKPoint(radius * (float)Math.Cos(angle), radius * (float)Math.Sin(angle));
     }
 
-    // TODO: Figure out better way, as this was removed from SkiaSharp.Extended and path is too complicated for Path.Contains().
-    public static SKPath CreateSectorPath(float start, float end, float outerRadius, float innerRadius = 0.0f, float margin = 0.0f, float explodeDistance = 0.0f, SKPathDirection direction = SKPathDirection.Clockwise)
+    // TODO: Cleanup and improve. Figure out path is too complicated for Path.Contains().
+    public static SKPath CreateSectorPath(SKRect parentRect, float startPercentage, float endPercentage)
     {
-        SKPath path = new();
+        float outerRadius = Math.Max(parentRect.Width, parentRect.Height) / 2;
+        float innerRadius = outerRadius / 2;
 
-        // If the sector has no size, then it has no path
-        if (start == end)
-        {
-            return path;
-        }
+        float startAngle = CircleConstants.GetDegrees(startPercentage);
+        float endAngle = CircleConstants.GetDegrees(endPercentage);
+        float sweepAngle = endAngle - startAngle;
 
-        // The the sector is a full circle, then do that
-        if (end - start == 1.0f)
-        {
-            path.AddCircle(0, 0, outerRadius, direction);
-            path.AddCircle(0, 0, innerRadius, direction);
-            path.FillType = SKPathFillType.EvenOdd;
-            return path;
-        }
+        float startAngleRadians = startAngle * (float)Math.PI / 180;
+        float endAngleRadians = endAngle * (float)Math.PI / 180;
 
-        // Calculate the angles
-        float startAngle = TotalAngle * start - UprightAngle;
-        float endAngle = TotalAngle * end - UprightAngle;
-        SKPathArcSize arcSize = endAngle - startAngle > PI ? SKPathArcSize.Large : SKPathArcSize.Small;
-        float sectorCenterAngle = (endAngle - startAngle) / 2f + startAngle;
+        var path = new SKPath();
 
-        // Move explosion around 90 degrees, since matrix use down as 0
-        SKMatrix explosionMatrix = SKMatrix.CreateRotation(sectorCenterAngle - (PI / 2f));
-        SKPoint offset = explosionMatrix.MapPoint(new SKPoint(0, explodeDistance));
+        SKPoint outerStartPoint = GetCirclePoint(outerRadius, startAngleRadians);
+        path.MoveTo(outerStartPoint);
 
-        // Calculate the angle for the margins
-        margin = direction == SKPathDirection.Clockwise ? margin : -margin;
-        float offsetR = outerRadius == 0 ? 0 : (margin / (TotalAngle * outerRadius) * TotalAngle);
-        float offsetr = innerRadius == 0 ? 0 : (margin / (TotalAngle * innerRadius) * TotalAngle);
+        SKRect outerRect = new(-outerRadius, -outerRadius, outerRadius, outerRadius);
+        path.ArcTo(outerRect, startAngle, sweepAngle, false);
 
-        // Get the points
-        SKPoint a = GetCirclePoint(outerRadius, startAngle + offsetR) + offset;
-        SKPoint b = GetCirclePoint(outerRadius, endAngle - offsetR) + offset;
-        SKPoint c = GetCirclePoint(innerRadius, endAngle - offsetr) + offset;
-        SKPoint d = GetCirclePoint(innerRadius, startAngle + offsetr) + offset;
+        SKPoint innerEndPoint = GetCirclePoint(innerRadius, endAngleRadians);
+        path.LineTo(innerEndPoint);
 
-        // Add the points to the path
-        path.MoveTo(a);
-        path.ArcTo(outerRadius, outerRadius, 0, arcSize, direction, b.X, b.Y);
-        path.LineTo(c);
-
-        if (innerRadius == 0.0f)
-        {
-            // Take a short cut
-            path.LineTo(d);
-        }
-        else
-        {
-            var reverseDirection = direction == SKPathDirection.Clockwise ? SKPathDirection.CounterClockwise : SKPathDirection.Clockwise;
-            path.ArcTo(innerRadius, innerRadius, 0, arcSize, reverseDirection, d.X, d.Y);
-        }
+        SKRect innerRect = new(-innerRadius, -innerRadius, innerRadius, innerRadius);
+        path.ArcTo(innerRect, endAngle, -sweepAngle, false);
 
         path.Close();
         return path;
