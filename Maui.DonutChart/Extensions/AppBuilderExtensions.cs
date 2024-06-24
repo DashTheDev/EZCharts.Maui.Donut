@@ -1,6 +1,6 @@
 ﻿using SkiaSharp.Views.Maui.Controls.Hosting;
 
-namespace Maui.DonutChart;
+namespace Microsoft.Maui.Hosting;
 
 public static class AppBuilderExtensions
 {

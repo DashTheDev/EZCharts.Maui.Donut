@@ -8,7 +8,13 @@ namespace Maui.DonutChart.Controls;
 [ContentProperty(nameof(Entries))]
 public class DonutChartView : SKCanvasView
 {
-    private SKRect _bounds = SKRect.Empty;
+    private SKRect _chartBounds = SKRect.Empty;
+    private SKPoint _chartBoundsCenter = SKPoint.Empty;
+
+    // TODO: Make these bindable properties
+    private readonly float _rotationDegrees = 90;
+    private readonly float _outerRadius = 250;
+    private readonly float _innerRadius = 125;
 
     public DonutChartView()
     {
@@ -52,9 +58,11 @@ public class DonutChartView : SKCanvasView
             return;
         }
 
+        SKPoint transformedTouchPoint = SKGeometry.ReverseTransformations(e.Location, _chartBoundsCenter);
+
         foreach (DataEntry entry in Entries)
         {
-            if (entry.Path is not null && entry.Path.Contains(e.Location.X, e.Location.Y))
+            if (entry.Path is not null && entry.Path.Contains(transformedTouchPoint.X, transformedTouchPoint.Y))
             {
                 entry.InvokeClicked();
             }
@@ -63,14 +71,14 @@ public class DonutChartView : SKCanvasView
 
     private void RenderChart(SKCanvas canvas, int width, int height)
     {
-        _bounds = new SKRect(0, 0, width, height);
+        SetChartBounds(new SKRect(0, 0, width, height));
         RenderBackground(canvas);
         RenderData(canvas);
     }
 
     private void RenderBackground(SKCanvas canvas)
     {
-        canvas.DrawRect(_bounds, SKPaints.Fill(BackgroundColor));
+        canvas.DrawRect(_chartBounds, SKPaints.Fill(BackgroundColor));
     }
 
     private void RenderData(SKCanvas canvas)
@@ -85,7 +93,7 @@ public class DonutChartView : SKCanvasView
         float totalValue = Entries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
-        canvas.Translate(_bounds.Width / 2, _bounds.Height / 2);
+        canvas.Translate(_chartBoundsCenter);
 
         foreach (DataEntry entry in Entries)
         {
@@ -94,7 +102,7 @@ public class DonutChartView : SKCanvasView
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(_bounds, percentageFilled, targetPercentageFilled);
+            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, _outerRadius, _innerRadius, _rotationDegrees);
             canvas.DrawPath(entry.Path, paint);
 
             percentageFilled = targetPercentageFilled;
@@ -105,5 +113,11 @@ public class DonutChartView : SKCanvasView
                 colorIndex = 0;
             }
         }
+    }
+
+    private void SetChartBounds(SKRect value)
+    {
+        _chartBounds = value;
+        _chartBoundsCenter = new(_chartBounds.Width.Halved(), _chartBounds.Height.Halved());
     }
 }
