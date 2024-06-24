@@ -8,19 +8,30 @@ namespace Maui.DonutChart.Controls;
 [ContentProperty(nameof(Entries))]
 public class DonutChartView : SKCanvasView
 {
+    #region Fields
+
     private SKRect _chartBounds = SKRect.Empty;
     private SKPoint _chartBoundsCenter = SKPoint.Empty;
 
-    // TODO: Make these bindable properties
-    private readonly float _rotationDegrees = 90;
-    private readonly float _outerRadius = 250;
-    private readonly float _innerRadius = 125;
+    #endregion
+
+    #region Constructor & Destructor
 
     public DonutChartView()
     {
         EnableTouchEvents = true;
         PaintSurface += OnPaintSurface;
     }
+
+    ~DonutChartView()
+    {
+        PaintSurface -= OnPaintSurface;
+        Entries.CollectionChanged -= OnEntriesCollectionChanged;
+    }
+
+    #endregion
+
+    #region Bindable Properties
 
     public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
         nameof(Entries),
@@ -39,9 +50,58 @@ public class DonutChartView : SKCanvasView
         set => SetValue(EntriesProperty, value);
     }
 
+    public static readonly BindableProperty ChartRotationDegreesProperty = BindableProperty.Create(
+        nameof(ChartRotationDegrees),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: 90f,
+        propertyChanged: OnVisualPropertyChanged);
+
+    public float ChartRotationDegrees
+    {
+        get => (float)GetValue(ChartRotationDegreesProperty);
+        set => SetValue(ChartRotationDegreesProperty, value);
+    }
+
+    public static readonly BindableProperty ChartOuterRadiusProperty = BindableProperty.Create(
+        nameof(ChartOuterRadius),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: 250f,
+        propertyChanged: OnVisualPropertyChanged);
+
+    public float ChartOuterRadius
+    {
+        get => (float)GetValue(ChartOuterRadiusProperty);
+        set => SetValue(ChartOuterRadiusProperty, value);
+    }
+
+    public static readonly BindableProperty ChartInnerRadiusProperty = BindableProperty.Create(
+        nameof(ChartInnerRadius),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: 125f,
+        propertyChanged: OnVisualPropertyChanged);
+
+    public float ChartInnerRadius
+    {
+        get => (float)GetValue(ChartInnerRadiusProperty);
+        set => SetValue(ChartInnerRadiusProperty, value);
+    }
+
+    #endregion
+
+    #region Event Handling
+
     private void OnEntriesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         InvalidateSurface();
+    }
+
+    // TODO: Obviously not ideal to render every time visual property is updated. Probably add support for batch property changes
+    private static void OnVisualPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        bindable.ToDonutChartView().InvalidateSurface();
     }
 
     private void OnPaintSurface(object? sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
@@ -69,9 +129,14 @@ public class DonutChartView : SKCanvasView
         }
     }
 
+    #endregion
+
+    #region Supporting Methods
+
     private void RenderChart(SKCanvas canvas, int width, int height)
     {
         SetChartBounds(new SKRect(0, 0, width, height));
+        canvas.Clear();
         RenderBackground(canvas);
         RenderData(canvas);
     }
@@ -102,7 +167,7 @@ public class DonutChartView : SKCanvasView
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, _outerRadius, _innerRadius, _rotationDegrees);
+            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, ChartOuterRadius, ChartInnerRadius, ChartRotationDegrees);
             canvas.DrawPath(entry.Path, paint);
 
             percentageFilled = targetPercentageFilled;
@@ -120,4 +185,6 @@ public class DonutChartView : SKCanvasView
         _chartBounds = value;
         _chartBoundsCenter = new(_chartBounds.Width.Halved(), _chartBounds.Height.Halved());
     }
+
+    #endregion
 }

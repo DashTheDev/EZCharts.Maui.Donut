@@ -10,9 +10,10 @@
 
         <donut:DonutChartView
             Grid.Row="1"
-            BackgroundColor="Red"
-            HeightRequest="500"
-            WidthRequest="500">
+            BackgroundColor="#10000000"
+            ChartInnerRadius="250"
+            ChartOuterRadius="400"
+            ChartRotationDegrees="90">
             <donut:DataEntry Clicked="OnEntryClicked" Value="200" />
             <donut:DataEntry Clicked="OnEntryClicked" Value="400" />
             <donut:DataEntry Clicked="OnEntryClicked" Value="300" />
