@@ -30,3 +30,33 @@ Our vision for SimplyCharts.DonutChart includes:
 
 ```bash
 dotnet add package SimplyCharts.DonutChart# Maui.DonutChart
+
+🔧 Usage
+Here's a quick example of how to use SimplyCharts.DonutChart in your XAML:
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sc="clr-namespace:SimplyCharts.DonutChart;assembly=SimplyCharts.DonutChart"
+             x:Class="YourNamespace.MainPage">
+
+    <sc:DonutChartView Data="{Binding YourData}"
+                       Colors="{Binding YourColors}"
+                       StrokeWidth="2"
+                       StrokeColor="White" />
+
+</ContentPage>
+```
+🤝 Contributing
+We welcome contributions! If you'd like to help improve SimplyCharts.DonutChart, please:
+
+Fork the repository
+Create your feature branch (git checkout -b feature/AmazingFeature)
+Commit your changes (git commit -m 'Add some AmazingFeature')
+Push to the branch (git push origin feature/AmazingFeature)
+Open a Pull Request
+
+📄 License
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+📬 Contact
+Dash -
+Project Link: https://github.com/Dash/SimplyCharts.DonutChart
