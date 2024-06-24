@@ -2,9 +2,9 @@
 
 namespace Maui.DonutChart.Samples.Views;
 
-public partial class MainPage : ContentPage
+public partial class SamplePage : ContentPage
 {
-    public MainPage()
+    public SamplePage()
     {
         InitializeComponent();
     }

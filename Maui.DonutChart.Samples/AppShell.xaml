@@ -7,9 +7,6 @@
     Title="Maui.DonutChart.Samples"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate v:MainPage}"
-        Route="MainPage" />
+    <ShellContent ContentTemplate="{DataTemplate v:MainPage}" />
 
 </Shell>

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Maui.DonutChart.Samples.ViewModels;
+using Maui.DonutChart.Samples.Views;
+using Microsoft.Extensions.Logging;
 
 namespace Maui.DonutChart.Samples;
 
@@ -10,6 +12,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseDonutChart()
+            .RegisterViews()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -21,5 +24,14 @@ public static class MauiProgram
         #endif
 
         return builder.Build();
+    }
+
+    private static MauiAppBuilder RegisterViews(this MauiAppBuilder appBuilder)
+    {
+        appBuilder.Services
+            .RegisterView<MainPage, MainViewModel>()
+            .RegisterView<SamplePage, SampleViewModel>();
+
+        return appBuilder;
     }
 }
