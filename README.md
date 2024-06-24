@@ -4,7 +4,7 @@
 
 ## 🍩 About SimplyCharts.DonutChart
 
-SimplyCharts.DonutChart is a focused fork of the SimplyCharts library, dedicated to creating a robust and feature-rich donut chart component for .NET MAUI applications. Our goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart solution.
+SimplyCharts.DonutChart is a focused fork of the [MicroCharts](https://github.com/microcharts-dotnet/Microcharts) library, dedicated to creating a robust and feature-rich donut chart component for .NET MAUI applications. Our goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart solution.
 
 ## 🚀 Recent Improvements
 
