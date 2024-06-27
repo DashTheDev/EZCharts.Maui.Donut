@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Maui.DonutChart.Helpers;
 using Maui.DonutChart.Models;
 using SkiaSharp;
@@ -15,6 +16,7 @@ public class DonutChartView : SKCanvasView
 
     private Func<object, float>? _entryValueAccessor;
     private Type? _entryType;
+    private INotifyCollectionChanged? _observableEntries;
     private DataEntry[] _internalEntries = [];
     private SKRect _chartBounds = SKRect.Empty;
     private SKPoint _chartBoundsCenter = SKPoint.Empty;
@@ -32,7 +34,11 @@ public class DonutChartView : SKCanvasView
     ~DonutChartView()
     {
         PaintSurface -= OnPaintSurface;
-        //Entries.CollectionChanged -= OnEntriesCollectionChanged;
+        
+        if (_observableEntries is not null)
+        {
+            _observableEntries.CollectionChanged -= OnEntriesCollectionChanged;
+        }
     }
 
     #endregion
@@ -48,12 +54,13 @@ public class DonutChartView : SKCanvasView
 
     #region Bindable Properties
 
+    // TODO: Default observable collection not being assigned to _observableEntries.
     /// <summary>Bindable property for <see cref="Entries"/>.</summary>
     public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
         nameof(Entries),
         typeof(IEnumerable),
         typeof(DonutChartView),
-        //propertyChanged: OnEntriesPropertyChanged,
+        propertyChanged: OnEntriesPropertyChanged,
         defaultValueCreator: bindable =>
         {
             ObservableCollection<object> entries = [];
@@ -159,13 +166,26 @@ public class DonutChartView : SKCanvasView
 
     #region Event Handling
 
-    // TODO: Handle observable collection properly now that Entries is now IEnumerable
-    //private static void OnEntriesPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-    //{
+    private static void OnEntriesPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        DonutChartView control = bindable.ToDonutChartView();
 
-    //}
+        if (oldValue is INotifyCollectionChanged oldObservableEntries)
+        {
+            oldObservableEntries.CollectionChanged -= control.OnEntriesCollectionChanged;
+            control._observableEntries = null;
+        }
 
-    private void OnEntriesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        if (newValue is INotifyCollectionChanged newObservableEntries)
+        {
+            newObservableEntries.CollectionChanged += control.OnEntriesCollectionChanged;
+            control._observableEntries = newObservableEntries;
+        }
+
+        control.InvalidateSurface();
+    }
+
+    private void OnEntriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         InvalidateSurface();
     }
@@ -225,6 +245,8 @@ public class DonutChartView : SKCanvasView
         canvas.DrawRect(_chartBounds, SKPaints.Fill(BackgroundColor));
     }
 
+    // TODO: Add support for default DataEntry is user doesn't want to use custom
+    // TODO: If only one entry, make sure full circle appears. Not drawing currently due to sector path logic
     private void RenderData(SKCanvas canvas)
     {
         _internalEntries = ValidateAndPrepareEntries();

@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Maui.DonutChart.Samples.Models;
 using Maui.DonutChart.Samples.Services;
 
@@ -25,7 +24,7 @@ internal sealed partial class SampleViewModel : BaseViewModel
 
     #region Bindable Properties
 
-    public ObservableCollection<TestResult> TestResults { get; private set; } = [];
+    public ObservableList<TestResult> TestResults { get; private set; } = [];
 
     #endregion
 
@@ -34,7 +33,8 @@ internal sealed partial class SampleViewModel : BaseViewModel
     [RelayCommand]
     private void RefreshData()
     {
-        TestResults = [.. _mockDataService.GetTestResults()];
+        TestResults.Clear();
+        TestResults.AddRange(_mockDataService.GetTestResults());
     }
 
     #endregion
