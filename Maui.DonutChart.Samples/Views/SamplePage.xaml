@@ -31,18 +31,22 @@
             ChartInnerRadius="250"
             ChartOuterRadius="400"
             ChartRotationDegrees="90"
-            EntryColors="{StaticResource ChartColors}">
-            <donut:DataEntry Clicked="OnEntryClicked" Value="200" />
-            <donut:DataEntry Clicked="OnEntryClicked" Value="400" />
-            <donut:DataEntry Clicked="OnEntryClicked" Value="300" />
-            <donut:DataEntry Clicked="OnEntryClicked" Value="432" />
-        </donut:DonutChartView>
+            Entries="{Binding TestResults}"
+            EntryClicked="OnEntryClicked"
+            EntryColors="{StaticResource ChartColors}"
+            EntryValuePath="Score" />
 
-        <Button
+        <Grid
             Grid.Row="2"
-            Command="{Binding GoBackCommand}"
-            HorizontalOptions="Center"
-            Text="Go Back" />
+            ColumnDefinitions="*,*"
+            ColumnSpacing="10"
+            HorizontalOptions="Center">
+            <Button Command="{Binding GoBackCommand}" Text="Go Back" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding RefreshDataCommand}"
+                Text="Refresh Data" />
+        </Grid>
     </Grid>
 
 </ContentPage>

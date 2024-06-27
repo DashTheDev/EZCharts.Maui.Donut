@@ -1,6 +1,4 @@
-﻿using Maui.DonutChart.Controls;
-
-namespace Maui.DonutChart.Samples.Views;
+﻿namespace Maui.DonutChart.Samples.Views;
 
 public partial class SamplePage : ContentPage
 {
@@ -9,14 +7,9 @@ public partial class SamplePage : ContentPage
         InitializeComponent();
     }
 
-    private void OnEntryClicked(object sender, EventArgs e)
+    private void OnEntryClicked(object sender, float e)
     {
-        if (sender is not DataEntry entry)
-        {
-            return;
-        }
-
-        ClickedLabel.Text = $"Entry with value {entry.Value}, clicked!";
+        ClickedLabel.Text = $"Entry with value {e}, clicked!";
     }
 }
 

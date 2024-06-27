@@ -1,4 +1,7 @@
-﻿using Maui.DonutChart.Helpers;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using Maui.DonutChart.Helpers;
+using Maui.DonutChart.Models;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
@@ -10,6 +13,9 @@ public class DonutChartView : SKCanvasView
 {
     #region Fields
 
+    private Func<object, float>? _entryValueAccessor;
+    private Type? _entryType;
+    private DataEntry[] _internalEntries = [];
     private SKRect _chartBounds = SKRect.Empty;
     private SKPoint _chartBoundsCenter = SKPoint.Empty;
 
@@ -26,8 +32,14 @@ public class DonutChartView : SKCanvasView
     ~DonutChartView()
     {
         PaintSurface -= OnPaintSurface;
-        Entries.CollectionChanged -= OnEntriesCollectionChanged;
+        //Entries.CollectionChanged -= OnEntriesCollectionChanged;
     }
+
+    #endregion
+
+    #region Events
+
+    public event EventHandler<float>? EntryClicked;
 
     #endregion
 
@@ -35,19 +47,33 @@ public class DonutChartView : SKCanvasView
 
     public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
         nameof(Entries),
-        typeof(DataEntryCollection),
+        typeof(IEnumerable),
         typeof(DonutChartView),
+        //propertyChanged: OnEntriesPropertyChanged,
         defaultValueCreator: bindable =>
         {
-            DataEntryCollection entries = [];
+            ObservableCollection<object> entries = [];
             entries.CollectionChanged += bindable.ToDonutChartView().OnEntriesCollectionChanged;
             return entries;
         });
 
-    public DataEntryCollection Entries
+    public IEnumerable Entries
     {
-        get => (DataEntryCollection)GetValue(EntriesProperty);
+        get => (IEnumerable)GetValue(EntriesProperty);
         set => SetValue(EntriesProperty, value);
+    }
+
+    public static readonly BindableProperty EntryValuePathProperty = BindableProperty.Create(
+        nameof(EntryValuePath),
+        typeof(string),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultEntryValuePath,
+        propertyChanged: OnEntryValuePathPropertyChanged);
+
+    public string EntryValuePath
+    {
+        get => (string)GetValue(EntryValuePathProperty);
+        set => SetValue(EntryValuePathProperty, value);
     }
 
     public static readonly BindableProperty EntryColorsProperty = BindableProperty.Create(
@@ -106,9 +132,22 @@ public class DonutChartView : SKCanvasView
 
     #region Event Handling
 
+    // TODO: Handle observable collection properly now that Entries is now IEnumerable
+    //private static void OnEntriesPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    //{
+
+    //}
+
     private void OnEntriesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         InvalidateSurface();
+    }
+
+    private static void OnEntryValuePathPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        DonutChartView control = bindable.ToDonutChartView();
+        control._entryValueAccessor = null;
+        control.InvalidateSurface();
     }
 
     // TODO: Obviously not ideal to render every time visual property is updated. Probably add support for batch property changes
@@ -133,11 +172,11 @@ public class DonutChartView : SKCanvasView
 
         SKPoint transformedTouchPoint = SKGeometry.ReverseTransformations(e.Location, _chartBoundsCenter);
 
-        foreach (DataEntry entry in Entries)
+        foreach (DataEntry entry in _internalEntries)
         {
             if (entry.Path is not null && entry.Path.Contains(transformedTouchPoint.X, transformedTouchPoint.Y))
             {
-                entry.InvokeClicked();
+                EntryClicked?.Invoke(this, entry.Value);
             }
         }
     }
@@ -161,19 +200,21 @@ public class DonutChartView : SKCanvasView
 
     private void RenderData(SKCanvas canvas)
     {
-        if (Entries.Count == 0)
+        _internalEntries = ValidateAndPrepareEntries();
+
+        if (_internalEntries.Length == 0)
         {
             return;
         }
 
         int colorIndex = 0;
         int maxColorIndex = EntryColors.Length - 1;
-        float totalValue = Entries.Sum(a => a.Value);
+        float totalValue = _internalEntries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
         canvas.Translate(_chartBoundsCenter);
 
-        foreach (DataEntry entry in Entries)
+        foreach (DataEntry entry in _internalEntries)
         {
             SKPaint paint = SKPaints.Fill(EntryColors[colorIndex]);
 
@@ -197,6 +238,45 @@ public class DonutChartView : SKCanvasView
     {
         _chartBounds = value;
         _chartBoundsCenter = new(_chartBounds.Width.Halved(), _chartBounds.Height.Halved());
+    }
+
+    private DataEntry[] ValidateAndPrepareEntries()
+    {
+        object[] entries = Entries.Cast<object>().ToArray();
+
+        if (entries.Length == 0)
+        {
+            return [];
+        }
+
+        _entryType = entries[0].GetType();
+
+        if (entries.Any(a => a.GetType() != _entryType))
+        {
+            throw new ArgumentException("All entries must be of the same type.");
+        }
+
+        // TODO: Handle exceptions
+        _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(_entryType, EntryValuePath);
+
+        List<DataEntry> dataEntries = [];
+
+        foreach (object entry in Entries)
+        {
+            try
+            {
+                dataEntries.Add(new DataEntry()
+                {
+                    Value = _entryValueAccessor(entry)
+                });
+            }
+            catch (InvalidCastException)
+            {
+                throw new Exception("Expected value to be a float.");
+            }
+        }
+
+        return [.. dataEntries];
     }
 
     #endregion
