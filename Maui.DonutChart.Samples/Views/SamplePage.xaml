@@ -8,6 +8,16 @@
     x:DataType="vm:SampleViewModel"
     Shell.NavBarIsVisible="False">
 
+    <ContentPage.Resources>
+        <x:Array x:Key="ChartColors" Type="{x:Type Color}">
+            <Color>#FFF5E1</Color>
+            <Color>#FFF5E1</Color>
+            <Color>#FF6969</Color>
+            <Color>#C80036</Color>
+            <Color>#0C1844</Color>
+        </x:Array>
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="50,*,50">
         <Label
             x:Name="ClickedLabel"
@@ -20,7 +30,8 @@
             BackgroundColor="#10000000"
             ChartInnerRadius="250"
             ChartOuterRadius="400"
-            ChartRotationDegrees="90">
+            ChartRotationDegrees="90"
+            EntryColors="{StaticResource ChartColors}">
             <donut:DataEntry Clicked="OnEntryClicked" Value="200" />
             <donut:DataEntry Clicked="OnEntryClicked" Value="400" />
             <donut:DataEntry Clicked="OnEntryClicked" Value="300" />

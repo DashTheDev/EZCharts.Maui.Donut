@@ -50,6 +50,19 @@ public class DonutChartView : SKCanvasView
         set => SetValue(EntriesProperty, value);
     }
 
+    public static readonly BindableProperty EntryColorsProperty = BindableProperty.Create(
+        nameof(EntryColors),
+        typeof(Color[]),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultChartColors,
+        propertyChanged: OnVisualPropertyChanged);
+
+    public Color[] EntryColors
+    {
+        get => (Color[])GetValue(EntryColorsProperty);
+        set => SetValue(EntryColorsProperty, value);
+    }
+
     public static readonly BindableProperty ChartRotationDegreesProperty = BindableProperty.Create(
         nameof(ChartRotationDegrees),
         typeof(float),
@@ -154,7 +167,7 @@ public class DonutChartView : SKCanvasView
         }
 
         int colorIndex = 0;
-        int maxColorIndex = ColorConstants.DefaultChartColors.Length - 1;
+        int maxColorIndex = EntryColors.Length - 1;
         float totalValue = Entries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
@@ -162,7 +175,7 @@ public class DonutChartView : SKCanvasView
 
         foreach (DataEntry entry in Entries)
         {
-            SKPaint paint = SKPaints.Fill(ColorConstants.DefaultChartColors[colorIndex]);
+            SKPaint paint = SKPaints.Fill(EntryColors[colorIndex]);
 
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;

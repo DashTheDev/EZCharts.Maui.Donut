@@ -1,6 +1,6 @@
-﻿namespace Maui.DonutChart.Controls;
+﻿namespace Maui.DonutChart;
 
-internal static class ColorConstants
+internal static class Constants
 {
     internal static readonly Color[] DefaultChartColors =
     [
