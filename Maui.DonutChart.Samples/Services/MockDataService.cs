@@ -4,10 +4,16 @@ namespace Maui.DonutChart.Samples.Services;
 
 internal class MockDataService
 {
+    #region Fields
+
     private readonly float _minValue = 0f;
     private readonly float _maxValue = 200f;
     private readonly int _minResultCount = 1;
     private readonly int _maxResultCount = 10;
+
+    #endregion
+
+    #region Service Methods
 
     internal TestResult[] GetTestResults()
     {
@@ -26,6 +32,12 @@ internal class MockDataService
         return [.. testResults];
     }
 
+    #endregion
+
+    #region Supporting Methods
+
     private float GetRandomScore(Random random)
         => (float)(_minValue + (random.NextDouble() * (_maxValue - _minValue)));
+
+    #endregion
 }

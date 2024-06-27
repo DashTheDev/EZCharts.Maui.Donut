@@ -4,6 +4,12 @@ namespace Maui.DonutChart.Helpers;
 
 internal static class Expressions
 {
+    /// <summary>
+    /// Creates an expression that accesses the property associated with the provided <paramref name="propertyName"/> on the provided <paramref name="type"/>.
+    /// </summary>
+    /// <exception cref="ArgumentNullException"/>
+    /// <exception cref="ArgumentException"/>
+    /// <exception cref="InvalidOperationException"/>
     internal static Func<object, TValue> CreatePropertyAccessor<TValue>(Type type, string propertyName)
     {
         ParameterExpression parameter = Expression.Parameter(typeof(object), "obj");

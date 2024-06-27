@@ -7,7 +7,13 @@ namespace Maui.DonutChart.Samples.ViewModels;
 
 internal sealed partial class SampleViewModel : BaseViewModel
 {
+    #region Fields
+
     private readonly MockDataService _mockDataService;
+
+    #endregion
+
+    #region Constructor
 
     public SampleViewModel(MockDataService mockDataService)
     {
@@ -15,11 +21,21 @@ internal sealed partial class SampleViewModel : BaseViewModel
         RefreshData();
     }
 
+    #endregion
+
+    #region Bindable Properties
+
     public ObservableCollection<TestResult> TestResults { get; private set; } = [];
+
+    #endregion
+
+    #region Commands
 
     [RelayCommand]
     private void RefreshData()
     {
         TestResults = [.. _mockDataService.GetTestResults()];
     }
+
+    #endregion
 }

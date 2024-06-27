@@ -39,12 +39,16 @@ public class DonutChartView : SKCanvasView
 
     #region Events
 
+    /// <summary>
+    /// Raised whenever a segment on the chart is clicked.
+    /// </summary>
     public event EventHandler<float>? EntryClicked;
 
     #endregion
 
     #region Bindable Properties
 
+    /// <summary>Bindable property for <see cref="Entries"/>.</summary>
     public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
         nameof(Entries),
         typeof(IEnumerable),
@@ -57,12 +61,16 @@ public class DonutChartView : SKCanvasView
             return entries;
         });
 
+    /// <summary>
+    /// Gets or sets the data entries to be used for rendering the chart. This is a bindable property.
+    /// </summary>
     public IEnumerable Entries
     {
         get => (IEnumerable)GetValue(EntriesProperty);
         set => SetValue(EntriesProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="EntryValuePath"/>.</summary>
     public static readonly BindableProperty EntryValuePathProperty = BindableProperty.Create(
         nameof(EntryValuePath),
         typeof(string),
@@ -70,12 +78,16 @@ public class DonutChartView : SKCanvasView
         defaultValue: Constants.DefaultEntryValuePath,
         propertyChanged: OnEntryValuePathPropertyChanged);
 
+    /// <summary>
+    /// Gets or sets the path of the value property to be accessed on each data entry. This is a bindable property.
+    /// </summary>
     public string EntryValuePath
     {
         get => (string)GetValue(EntryValuePathProperty);
         set => SetValue(EntryValuePathProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="EntryColors"/>.</summary>
     public static readonly BindableProperty EntryColorsProperty = BindableProperty.Create(
         nameof(EntryColors),
         typeof(Color[]),
@@ -83,12 +95,16 @@ public class DonutChartView : SKCanvasView
         defaultValue: Constants.DefaultChartColors,
         propertyChanged: OnVisualPropertyChanged);
 
+    /// <summary>
+    /// Gets or sets the colors to be used when displaying data. This is a bindable property.
+    /// </summary>
     public Color[] EntryColors
     {
         get => (Color[])GetValue(EntryColorsProperty);
         set => SetValue(EntryColorsProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="ChartRotationDegrees"/>.</summary>
     public static readonly BindableProperty ChartRotationDegreesProperty = BindableProperty.Create(
         nameof(ChartRotationDegrees),
         typeof(float),
@@ -96,12 +112,16 @@ public class DonutChartView : SKCanvasView
         defaultValue: 90f,
         propertyChanged: OnVisualPropertyChanged);
 
+    /// <summary>
+    /// Gets or sets the rotation offset of the chart. This is a bindable property.
+    /// </summary>
     public float ChartRotationDegrees
     {
         get => (float)GetValue(ChartRotationDegreesProperty);
         set => SetValue(ChartRotationDegreesProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="ChartOuterRadius"/>.</summary>
     public static readonly BindableProperty ChartOuterRadiusProperty = BindableProperty.Create(
         nameof(ChartOuterRadius),
         typeof(float),
@@ -109,12 +129,16 @@ public class DonutChartView : SKCanvasView
         defaultValue: 250f,
         propertyChanged: OnVisualPropertyChanged);
 
+    /// <summary>
+    /// Gets or sets how big the outer circle of the chart will be. This is a bindable property.
+    /// </summary>
     public float ChartOuterRadius
     {
         get => (float)GetValue(ChartOuterRadiusProperty);
         set => SetValue(ChartOuterRadiusProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="ChartInnerRadius"/>.</summary>
     public static readonly BindableProperty ChartInnerRadiusProperty = BindableProperty.Create(
         nameof(ChartInnerRadius),
         typeof(float),
@@ -122,6 +146,9 @@ public class DonutChartView : SKCanvasView
         defaultValue: 125f,
         propertyChanged: OnVisualPropertyChanged);
 
+    /// <summary>
+    /// Gets or sets how big the inner circle of the chart will be. This is a bindable property.
+    /// </summary>
     public float ChartInnerRadius
     {
         get => (float)GetValue(ChartInnerRadiusProperty);
@@ -156,7 +183,7 @@ public class DonutChartView : SKCanvasView
         bindable.ToDonutChartView().InvalidateSurface();
     }
 
-    private void OnPaintSurface(object? sender, SkiaSharp.Views.Maui.SKPaintSurfaceEventArgs e)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         RenderChart(e.Surface.Canvas, e.Info.Width, e.Info.Height);
     }
@@ -256,24 +283,28 @@ public class DonutChartView : SKCanvasView
             throw new ArgumentException("All entries must be of the same type.");
         }
 
-        // TODO: Handle exceptions
-        _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(_entryType, EntryValuePath);
-
         List<DataEntry> dataEntries = [];
 
-        foreach (object entry in Entries)
+        try
         {
-            try
+            // NOTE: Using compiled expressions rather than reflection to increase performance for accessing properties dynamically
+            _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(_entryType, EntryValuePath);
+
+            foreach (object entry in Entries)
             {
                 dataEntries.Add(new DataEntry()
                 {
                     Value = _entryValueAccessor(entry)
                 });
             }
-            catch (InvalidCastException)
-            {
-                throw new Exception("Expected value to be a float.");
-            }
+        }
+        catch (InvalidCastException)
+        {
+            throw new ArgumentException("Expected value to be a float.");
+        }
+        catch
+        {
+            throw new ArgumentException($"Could not find property {EntryValuePath} on Entry type.");
         }
 
         return [.. dataEntries];
