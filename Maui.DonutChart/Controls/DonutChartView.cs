@@ -9,7 +9,7 @@ using SkiaSharp.Views.Maui.Controls;
 
 namespace Maui.DonutChart.Controls;
 
-[ContentProperty(nameof(Entries))]
+[ContentProperty(nameof(EntriesSource))]
 public class DonutChartView : SKCanvasView
 {
     #region Fields
@@ -17,7 +17,7 @@ public class DonutChartView : SKCanvasView
     private Func<object, float>? _entryValueAccessor;
     private Type? _entryType;
     private INotifyCollectionChanged? _observableEntries;
-    private DataEntry[] _internalEntries = [];
+    private InternalDataEntry[] _internalEntries = [];
     private SKRect _chartBounds = SKRect.Empty;
     private SKPoint _chartBoundsCenter = SKPoint.Empty;
 
@@ -27,7 +27,7 @@ public class DonutChartView : SKCanvasView
 
     public DonutChartView()
     {
-        _observableEntries = Entries as INotifyCollectionChanged;
+        _observableEntries = EntriesSource as INotifyCollectionChanged;
         EnableTouchEvents = true;
         PaintSurface += OnPaintSurface;
     }
@@ -38,7 +38,7 @@ public class DonutChartView : SKCanvasView
         
         if (_observableEntries is not null)
         {
-            _observableEntries.CollectionChanged -= OnEntriesCollectionChanged;
+            _observableEntries.CollectionChanged -= OnEntriesSourceCollectionChanged;
         }
     }
 
@@ -55,27 +55,27 @@ public class DonutChartView : SKCanvasView
 
     #region Bindable Properties
 
-    /// <summary>Bindable property for <see cref="Entries"/>.</summary>
-    public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
-        nameof(Entries),
+    /// <summary>Bindable property for <see cref="EntriesSource"/>.</summary>
+    public static readonly BindableProperty EntriesSourceProperty = BindableProperty.Create(
+        nameof(EntriesSource),
         typeof(IEnumerable),
         typeof(DonutChartView),
-        propertyChanged: OnEntriesPropertyChanged,
+        propertyChanged: OnEntriesSourcePropertyChanged,
         defaultValueCreator: bindable =>
         {
             ObservableCollection<object> entries = [];
-            entries.CollectionChanged += bindable.ToDonutChartView().OnEntriesCollectionChanged;
+            entries.CollectionChanged += bindable.ToDonutChartView().OnEntriesSourceCollectionChanged;
             return entries;
         });
 
     /// <summary>
-    /// Gets or sets the data entries to be used for rendering the chart.<br/><br/>
+    /// Gets or sets the source of entry data to be used for rendering the chart.<br/><br/>
     /// This is a bindable property which defaults to an empty <see cref="ObservableCollection{T}"/> with type <see cref="object"/>.
     /// </summary>
-    public IEnumerable Entries
+    public IEnumerable EntriesSource
     {
-        get => (IEnumerable)GetValue(EntriesProperty);
-        set => SetValue(EntriesProperty, value);
+        get => (IEnumerable)GetValue(EntriesSourceProperty);
+        set => SetValue(EntriesSourceProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="EntryValuePath"/>.</summary>
@@ -172,26 +172,26 @@ public class DonutChartView : SKCanvasView
 
     #region Event Handling
 
-    private static void OnEntriesPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnEntriesSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         DonutChartView control = bindable.ToDonutChartView();
 
         if (oldValue is INotifyCollectionChanged oldObservableEntries)
         {
-            oldObservableEntries.CollectionChanged -= control.OnEntriesCollectionChanged;
+            oldObservableEntries.CollectionChanged -= control.OnEntriesSourceCollectionChanged;
             control._observableEntries = null;
         }
 
         if (newValue is INotifyCollectionChanged newObservableEntries)
         {
-            newObservableEntries.CollectionChanged += control.OnEntriesCollectionChanged;
+            newObservableEntries.CollectionChanged += control.OnEntriesSourceCollectionChanged;
             control._observableEntries = newObservableEntries;
         }
 
         control.InvalidateSurface();
     }
 
-    private void OnEntriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void OnEntriesSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         InvalidateSurface();
     }
@@ -225,7 +225,7 @@ public class DonutChartView : SKCanvasView
 
         SKPoint transformedTouchPoint = SKGeometry.ReverseTransformations(e.Location, _chartBoundsCenter);
 
-        foreach (DataEntry entry in _internalEntries)
+        foreach (InternalDataEntry entry in _internalEntries)
         {
             if (entry.Path is not null && entry.Path.Contains(transformedTouchPoint.X, transformedTouchPoint.Y))
             {
@@ -251,7 +251,6 @@ public class DonutChartView : SKCanvasView
         canvas.DrawRect(_chartBounds, SKPaints.Fill(BackgroundColor));
     }
 
-    // TODO: Add support for default DataEntry is user doesn't want to use custom
     private void RenderData(SKCanvas canvas)
     {
         _internalEntries = ValidateAndPrepareEntries();
@@ -268,7 +267,7 @@ public class DonutChartView : SKCanvasView
 
         canvas.Translate(_chartBoundsCenter);
 
-        foreach (DataEntry entry in _internalEntries)
+        foreach (InternalDataEntry entry in _internalEntries)
         {
             SKPaint paint = SKPaints.Fill(EntryColors[colorIndex]);
 
@@ -294,9 +293,9 @@ public class DonutChartView : SKCanvasView
         _chartBoundsCenter = new(_chartBounds.Width.Halved(), _chartBounds.Height.Halved());
     }
 
-    private DataEntry[] ValidateAndPrepareEntries()
+    private InternalDataEntry[] ValidateAndPrepareEntries()
     {
-        object[] entries = Entries.Cast<object>().ToArray();
+        object[] entries = EntriesSource.Cast<object>().ToArray();
 
         if (entries.Length == 0)
         {
@@ -310,16 +309,16 @@ public class DonutChartView : SKCanvasView
             throw new ArgumentException("All entries must be of the same type.");
         }
 
-        List<DataEntry> dataEntries = [];
+        List<InternalDataEntry> dataEntries = [];
 
         try
         {
             // NOTE: Using compiled expressions rather than reflection to increase performance for accessing properties dynamically
             _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(_entryType, EntryValuePath);
 
-            foreach (object entry in Entries)
+            foreach (object entry in EntriesSource)
             {
-                dataEntries.Add(new DataEntry()
+                dataEntries.Add(new InternalDataEntry()
                 {
                     Value = _entryValueAccessor(entry)
                 });

@@ -30,10 +30,29 @@
             ChartInnerRadius="250"
             ChartOuterRadius="400"
             ChartRotationDegrees="90"
-            Entries="{Binding TestResults}"
+            EntriesSource="{Binding TestResults}"
             EntryClicked="OnEntryClicked"
             EntryColors="{StaticResource ChartColors}"
             EntryValuePath="Score" />
+
+        <!--  Example without MVVM Entries source  -->
+        <!--<donut:DonutChartView
+            Grid.Row="1"
+            BackgroundColor="#10000000"
+            ChartInnerRadius="250"
+            ChartOuterRadius="400"
+            ChartRotationDegrees="90"
+            EntryClicked="OnEntryClicked"
+            EntryColors="{StaticResource ChartColors}">
+            <x:Array Type="{x:Type donut:DataEntry}">
+                <donut:DataEntry Value="200" />
+                <donut:DataEntry Value="300" />
+                <donut:DataEntry Value="325" />
+                <donut:DataEntry Value="50" />
+                <donut:DataEntry Value="74" />
+                <donut:DataEntry Value="100" />
+            </x:Array>
+        </donut:DonutChartView>-->
 
         <Grid
             Grid.Row="2"
