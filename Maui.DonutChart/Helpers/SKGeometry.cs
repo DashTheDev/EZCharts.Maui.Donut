@@ -7,6 +7,7 @@ internal static class SKGeometry
 {
     internal static SKPath CreateSectorPath(float startPercentage, float endPercentage, float outerRadius, float innerRadius, float rotationDegrees)
     {
+        bool isFullCircle = endPercentage - startPercentage == 1;
         float startAngle = GetDegrees(startPercentage, rotationDegrees);
         float endAngle = GetDegrees(endPercentage, rotationDegrees);
         float sweepAngle = endAngle - startAngle;
@@ -18,9 +19,26 @@ internal static class SKGeometry
 
         SKPath path = new();
         path.MoveTo(outerStartPoint);
-        path.ArcTo(outerRect, startAngle, sweepAngle, false);
-        path.LineTo(innerEndPoint);
-        path.ArcTo(innerRect, endAngle, -sweepAngle, false);
+
+        if (isFullCircle)
+        {
+            // NOTE: To get SkiaSharp to draw a full circle with Arcs, we have to break down into two half arcs.
+            float middleAngle = GetDegrees(0.5f, rotationDegrees);
+            float halvedSweepAngle = sweepAngle.Halved();
+
+            path.ArcTo(outerRect, startAngle, halvedSweepAngle, false);
+            path.ArcTo(outerRect, middleAngle, halvedSweepAngle, false);
+            path.LineTo(innerEndPoint);
+            path.ArcTo(innerRect, endAngle, -halvedSweepAngle, false);
+            path.ArcTo(innerRect, middleAngle, -halvedSweepAngle, false);
+        }
+        else
+        {
+            path.ArcTo(outerRect, startAngle, sweepAngle, false);
+            path.LineTo(innerEndPoint);
+            path.ArcTo(innerRect, endAngle, -sweepAngle, false);
+        }
+
         path.Close();
         return path;
     }

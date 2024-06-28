@@ -27,6 +27,7 @@ public class DonutChartView : SKCanvasView
 
     public DonutChartView()
     {
+        _observableEntries = Entries as INotifyCollectionChanged;
         EnableTouchEvents = true;
         PaintSurface += OnPaintSurface;
     }
@@ -54,7 +55,6 @@ public class DonutChartView : SKCanvasView
 
     #region Bindable Properties
 
-    // TODO: Default observable collection not being assigned to _observableEntries.
     /// <summary>Bindable property for <see cref="Entries"/>.</summary>
     public static readonly BindableProperty EntriesProperty = BindableProperty.Create(
         nameof(Entries),
@@ -69,7 +69,8 @@ public class DonutChartView : SKCanvasView
         });
 
     /// <summary>
-    /// Gets or sets the data entries to be used for rendering the chart. This is a bindable property.
+    /// Gets or sets the data entries to be used for rendering the chart.<br/><br/>
+    /// This is a bindable property which defaults to an empty <see cref="ObservableCollection{T}"/> with type <see cref="object"/>.
     /// </summary>
     public IEnumerable Entries
     {
@@ -86,7 +87,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnEntryValuePathPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the path of the value property to be accessed on each data entry. This is a bindable property.
+    /// Gets or sets the path of the value property to be accessed on each data entry.<br/><br/>
+    /// This is a bindable property which defaults to <c>"Value"</c>.
     /// </summary>
     public string EntryValuePath
     {
@@ -103,7 +105,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the colors to be used when displaying data. This is a bindable property.
+    /// Gets or sets the colors to be used when displaying data.<br/><br/>
+    /// This is a bindable property which defaults to <c>Blue,Green,Yellow,Purple,Orange</c>.
     /// </summary>
     public Color[] EntryColors
     {
@@ -120,7 +123,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the rotation offset of the chart. This is a bindable property.
+    /// Gets or sets the rotation offset of the chart.<br/><br/>
+    /// This is a bindable property which defaults to <c>90f</c>.
     /// </summary>
     public float ChartRotationDegrees
     {
@@ -137,7 +141,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets how big the outer circle of the chart will be. This is a bindable property.
+    /// Gets or sets how big the outer circle of the chart will be.<br/><br/>
+    /// This is a bindable property which defaults to <c>250f</c>.
     /// </summary>
     public float ChartOuterRadius
     {
@@ -154,7 +159,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets how big the inner circle of the chart will be. This is a bindable property.
+    /// Gets or sets how big the inner circle of the chart will be.<br/><br/>
+    /// This is a bindable property which defaults to <c>125f</c>.
     /// </summary>
     public float ChartInnerRadius
     {
@@ -246,7 +252,6 @@ public class DonutChartView : SKCanvasView
     }
 
     // TODO: Add support for default DataEntry is user doesn't want to use custom
-    // TODO: If only one entry, make sure full circle appears. Not drawing currently due to sector path logic
     private void RenderData(SKCanvas canvas)
     {
         _internalEntries = ValidateAndPrepareEntries();
