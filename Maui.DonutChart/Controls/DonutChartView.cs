@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Maui.DonutChart.Helpers;
 using Maui.DonutChart.Models;
+using Microsoft.Maui.Controls.Shapes;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
@@ -10,7 +11,7 @@ using SkiaSharp.Views.Maui.Controls;
 namespace Maui.DonutChart.Controls;
 
 [ContentProperty(nameof(EntriesSource))]
-public class DonutChartView : SKCanvasView
+public class DonutChartView : SKCanvasView, IPadding
 {
     #region Fields
 
@@ -133,6 +134,24 @@ public class DonutChartView : SKCanvasView
         set => SetValue(EntryColorsProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="Padding"/>.</summary>
+    public static readonly BindableProperty PaddingProperty = BindableProperty.Create(
+        nameof(Padding),
+        typeof(Thickness),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultPadding,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the padding of the entire view.<br/><br/>
+    /// This is a bindable property which defaults to <c>10d</c>.
+    /// </summary>
+    public Thickness Padding
+    {
+        get => (Thickness)GetValue(PaddingProperty);
+        set => SetValue(PaddingProperty, value);
+    }
+
     /// <summary>Bindable property for <see cref="ChartRotationDegrees"/>.</summary>
     public static readonly BindableProperty ChartRotationDegreesProperty = BindableProperty.Create(
         nameof(ChartRotationDegrees),
@@ -160,7 +179,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets how big the outer circle of the chart will be.<br/><br/>
+    /// Gets or sets how big the outer circle of the chart will be.<br/>
+    /// If the provided value is too big for the display, it will be adjusted to fit.<br/><br/>
     /// This is a bindable property which defaults to <c>250f</c>.
     /// </summary>
     public float ChartOuterRadius
@@ -178,7 +198,8 @@ public class DonutChartView : SKCanvasView
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets how big the inner circle of the chart will be.<br/><br/>
+    /// Gets or sets how big the inner circle of the chart will be.<br/>
+    /// If the provided value is too big for the display, it will be adjusted to fit.<br/><br/>
     /// This is a bindable property which defaults to <c>125f</c>.
     /// </summary>
     public float ChartInnerRadius
@@ -357,8 +378,8 @@ public class DonutChartView : SKCanvasView
         canvas.Clear();
 
         _canvasBounds = new(0, 0, width, height);
-        _chartBounds = new(0, 0, width * 0.75f, height);
-        _textBounds = new(_chartBounds.Width, 0, width, height);
+        _chartBounds = SKGeometry.CreatePaddedRect(0, 0, width * 0.75f, height, Padding);
+        _textBounds = SKGeometry.CreatePaddedRect(_chartBounds.Width, 0, width, height, Padding);
         _internalEntries = ValidateAndPrepareEntries();
 
         RenderBackground(canvas);
@@ -368,9 +389,9 @@ public class DonutChartView : SKCanvasView
 
     private void RenderBackground(SKCanvas canvas)
     {
+        canvas.DrawRect(_canvasBounds, SKPaints.Fill(BackgroundColor));
         //canvas.DrawRect(_chartBounds, SKPaints.Fill(Colors.Red.WithAlpha(0.25f)));
         //canvas.DrawRect(_textBounds, SKPaints.Fill(Colors.Green.WithAlpha(0.25f)));
-        canvas.DrawRect(_canvasBounds, SKPaints.Fill(BackgroundColor));
     }
 
     private void RenderValues(SKCanvas canvas)
@@ -384,6 +405,10 @@ public class DonutChartView : SKCanvasView
         float totalValue = _internalEntries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
+        // Fit radiuses to bounds, otherwise chart will go off screen if too big
+        float outerRadius = MathF.Min(_chartBounds.Width.Halved(), ChartOuterRadius);
+        float innerRadius = MathF.Min(_chartBounds.Width.Halved(), ChartInnerRadius);
+
         foreach (InternalDataEntry entry in _internalEntries)
         {
             SKPaint paint = SKPaints.Fill(colorSelector.Next());
@@ -391,16 +416,14 @@ public class DonutChartView : SKCanvasView
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, ChartOuterRadius, ChartInnerRadius, ChartRotationDegrees);
+            entry.Path = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, outerRadius, innerRadius, ChartRotationDegrees);
             canvas.DrawPath(entry.Path, paint);
 
             percentageFilled = targetPercentageFilled;
         }
     }
 
-    // TODO: Cleanup rendering code
     // TODO: Add support for changing text positioning
-    // TODO: True center text
     private void RenderLabels(SKCanvas canvas)
     {
         if (_internalEntries.Length == 0)
@@ -411,16 +434,29 @@ public class DonutChartView : SKCanvasView
         ColorSelector colorSelector = new(EntryColors);
         SKPaint textPaint = SKPaints.Text(LabelFontFamily, LabelFontColor, LabelFontSize);
         float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * LabelSpacing;
-        float startY = _textBounds.MidY - totalTextHeight / 2;
         float circleRadius = LabelFontSize.Halved();
         float circleRadiusHalved = circleRadius.Halved();
+        float maxWidth = 0;
+
+        foreach (InternalDataEntry entry in _internalEntries)
+        {
+            float lineWidth = textPaint.MeasureText(entry.Label);
+
+            if (lineWidth > maxWidth)
+            {
+                maxWidth = lineWidth;
+            }
+        }
+
+        float startX = _textBounds.Left + (_textBounds.Width - maxWidth) / 2 + LabelColorOffset;
+        float startY = _textBounds.MidY - totalTextHeight / 2;
 
         for (int i = 0; i < _internalEntries.Length; i++)
         {
             SKPaint circlePaint = SKPaints.Fill(colorSelector.Next());
             float y = startY + i * (textPaint.TextSize + LabelSpacing);
-            canvas.DrawText(_internalEntries[i].Label, _textBounds.MidX, y, textPaint);
-            canvas.DrawCircle(_textBounds.MidX - LabelColorOffset, y - circleRadiusHalved, circleRadius, circlePaint);
+            canvas.DrawText(_internalEntries[i].Label, startX, y, textPaint);
+            canvas.DrawCircle(startX - LabelColorOffset, y - circleRadiusHalved, circleRadius, circlePaint);
         }
     }
 

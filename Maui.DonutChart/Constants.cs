@@ -2,7 +2,8 @@
 
 internal static class Constants
 {
-    internal const float DefaultChartRotationDegrees = 90f;   
+    internal static readonly Thickness DefaultPadding = new(10);
+    internal const float DefaultChartRotationDegrees = 90f;
     internal const float DefaultChartOuterRadius = 250f;   
     internal const float DefaultChartInnerRadius = 125f;
     internal const string DefaultLabelFontFamily = "Arial";

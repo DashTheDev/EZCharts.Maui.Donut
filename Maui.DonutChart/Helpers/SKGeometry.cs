@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Maui.DonutChart.Models;
+using SkiaSharp;
 
 namespace Maui.DonutChart.Helpers;
 
@@ -50,6 +51,12 @@ internal static class SKGeometry
         return path;
     }
 
+    internal static SKRect CreatePaddedRect(float left, float top, float width, float height, Thickness padding)
+        => new (left + padding.Left.ToFloat(),
+            top + padding.Top.ToFloat(),
+            width - padding.Right.ToFloat(),
+            height - padding.Bottom.ToFloat());
+
     private static float GetDegrees(float percentage, float rotationDegrees)
         => percentage * 360 - rotationDegrees;
 
@@ -57,9 +64,9 @@ internal static class SKGeometry
         => degrees * MathF.PI / 180;
 
     private static SKRect GetRadiusRect(float centerX, float centerY, float radius)
-        => new(centerX - radius, 
+        => new(centerX - radius,
             centerY - radius,
-            centerX + radius, 
+            centerX + radius,
             centerY + radius);
 
     private static SKPoint GetCirclePoint(float centerX, float centerY, float radius, float angleRadians)
