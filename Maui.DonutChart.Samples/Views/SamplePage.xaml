@@ -10,10 +10,16 @@
 
     <ContentPage.Resources>
         <x:Array x:Key="ChartColors" Type="{x:Type Color}">
-            <Color>#FFF5E1</Color>
-            <Color>#FF6969</Color>
-            <Color>#C80036</Color>
-            <Color>#0C1844</Color>
+            <Color>#9e0142</Color>
+            <Color>#d53e4f</Color>
+            <Color>#f46d43</Color>
+            <Color>#fdae61</Color>
+            <Color>#fee08b</Color>
+            <Color>#e6f598</Color>
+            <Color>#abdda4</Color>
+            <Color>#66c2a5</Color>
+            <Color>#3288bd</Color>
+            <Color>#5e4fa2</Color>
         </x:Array>
     </ContentPage.Resources>
 
@@ -33,6 +39,7 @@
             EntriesSource="{Binding TestResults}"
             EntryClicked="OnEntryClicked"
             EntryColors="{StaticResource ChartColors}"
+            EntryLabelPath="Category"
             EntryValuePath="Score" />
 
         <!--  Example without MVVM Entries source  -->
@@ -45,12 +52,10 @@
             EntryClicked="OnEntryClicked"
             EntryColors="{StaticResource ChartColors}">
             <x:Array Type="{x:Type donut:DataEntry}">
-                <donut:DataEntry Value="200" />
-                <donut:DataEntry Value="300" />
-                <donut:DataEntry Value="325" />
-                <donut:DataEntry Value="50" />
-                <donut:DataEntry Value="74" />
-                <donut:DataEntry Value="100" />
+                <donut:DataEntry Label="English" Value="200" />
+                <donut:DataEntry Label="Mathematics" Value="300" />
+                <donut:DataEntry Label="Geography" Value="325" />
+                <donut:DataEntry Label="Science" Value="50" />
             </x:Array>
         </donut:DonutChartView>-->
 

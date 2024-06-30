@@ -5,16 +5,26 @@ namespace Maui.DonutChart.Helpers;
 
 internal static class SKPaints
 {
-    internal static SKPaint Fill(Color? color) => new()
+    internal static SKPaint Fill(Color? color = null) => new()
     {
+        IsAntialias = true,
         Style = SKPaintStyle.Fill,
         Color = GetSKColor(color)
     };
 
-    internal static SKPaint Stroke(Color? color, float width = 1) => new()
+    internal static SKPaint Stroke(Color? color = null, float width = 1) => new()
     {
+        IsAntialias = true,
         Style = SKPaintStyle.Stroke,
         StrokeWidth = width,
+        Color = GetSKColor(color)
+    };
+
+    internal static SKPaint Text(Color? color = null, float size = 10) => new()
+    {
+        IsAntialias = true,
+        TextSize = size,
+        TextAlign = SKTextAlign.Left,
         Color = GetSKColor(color)
     };
 

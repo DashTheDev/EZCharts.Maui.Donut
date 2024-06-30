@@ -15,11 +15,12 @@ public class DonutChartView : SKCanvasView
     #region Fields
 
     private Func<object, float>? _entryValueAccessor;
-    private Type? _entryType;
+    private Func<object, string>? _entryLabelAccessor;
     private INotifyCollectionChanged? _observableEntries;
     private InternalDataEntry[] _internalEntries = [];
+    private SKRect _canvasBounds = SKRect.Empty;
     private SKRect _chartBounds = SKRect.Empty;
-    private SKPoint _chartBoundsCenter = SKPoint.Empty;
+    private SKRect _textBounds = SKRect.Empty;
 
     #endregion
 
@@ -94,6 +95,24 @@ public class DonutChartView : SKCanvasView
     {
         get => (string)GetValue(EntryValuePathProperty);
         set => SetValue(EntryValuePathProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="EntryLabelPath"/>.</summary>
+    public static readonly BindableProperty EntryLabelPathProperty = BindableProperty.Create(
+        nameof(EntryLabelPath),
+        typeof(string),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultEntryLabelPath,
+        propertyChanged: OnEntryLabelPathPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the path of the label property to be accessed on each data entry.<br/><br/>
+    /// This is a bindable property which defaults to <c>"Label"</c>.
+    /// </summary>
+    public string EntryLabelPath
+    {
+        get => (string)GetValue(EntryLabelPathProperty);
+        set => SetValue(EntryLabelPathProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="EntryColors"/>.</summary>
@@ -203,6 +222,13 @@ public class DonutChartView : SKCanvasView
         control.InvalidateSurface();
     }
 
+    private static void OnEntryLabelPathPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        DonutChartView control = bindable.ToDonutChartView();
+        control._entryLabelAccessor = null;
+        control.InvalidateSurface();
+    }
+
     // TODO: Obviously not ideal to render every time visual property is updated. Probably add support for batch property changes
     private static void OnVisualPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -223,11 +249,9 @@ public class DonutChartView : SKCanvasView
             return;
         }
 
-        SKPoint transformedTouchPoint = SKGeometry.ReverseTransformations(e.Location, _chartBoundsCenter);
-
         foreach (InternalDataEntry entry in _internalEntries)
         {
-            if (entry.Path is not null && entry.Path.Contains(transformedTouchPoint.X, transformedTouchPoint.Y))
+            if (entry.Path is not null && entry.Path.Contains(e.Location.X, e.Location.Y))
             {
                 EntryClicked?.Invoke(this, entry.Value);
             }
@@ -240,57 +264,82 @@ public class DonutChartView : SKCanvasView
 
     private void RenderChart(SKCanvas canvas, int width, int height)
     {
-        SetChartBounds(new SKRect(0, 0, width, height));
         canvas.Clear();
+
+        _canvasBounds = new(0, 0, width, height);
+        _chartBounds = new(0, 0, width * 0.75f, height);
+        _textBounds = new(_chartBounds.Width, 0, width, height);
+        _internalEntries = ValidateAndPrepareEntries();
+
         RenderBackground(canvas);
-        RenderData(canvas);
+        RenderValues(canvas);
+        RenderLabels(canvas);
     }
 
     private void RenderBackground(SKCanvas canvas)
     {
-        canvas.DrawRect(_chartBounds, SKPaints.Fill(BackgroundColor));
+        //canvas.DrawRect(_chartBounds, SKPaints.Fill(Colors.Red.WithAlpha(0.25f)));
+        //canvas.DrawRect(_textBounds, SKPaints.Fill(Colors.Green.WithAlpha(0.25f)));
+        canvas.DrawRect(_canvasBounds, SKPaints.Fill(BackgroundColor));
     }
 
-    private void RenderData(SKCanvas canvas)
+    private void RenderValues(SKCanvas canvas)
     {
-        _internalEntries = ValidateAndPrepareEntries();
-
         if (_internalEntries.Length == 0)
         {
             return;
         }
 
-        int colorIndex = 0;
-        int maxColorIndex = EntryColors.Length - 1;
+        ColorSelector colorSelector = new(EntryColors);
         float totalValue = _internalEntries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
-        canvas.Translate(_chartBoundsCenter);
-
         foreach (InternalDataEntry entry in _internalEntries)
         {
-            SKPaint paint = SKPaints.Fill(EntryColors[colorIndex]);
+            SKPaint paint = SKPaints.Fill(colorSelector.Next());
 
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(percentageFilled, targetPercentageFilled, ChartOuterRadius, ChartInnerRadius, ChartRotationDegrees);
+            entry.Path = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, ChartOuterRadius, ChartInnerRadius, ChartRotationDegrees);
             canvas.DrawPath(entry.Path, paint);
 
             percentageFilled = targetPercentageFilled;
-            colorIndex++;
-
-            if (colorIndex >= maxColorIndex)
-            {
-                colorIndex = 0;
-            }
         }
     }
 
-    private void SetChartBounds(SKRect value)
+    // TODO: Add bindable property for text size
+    // TODO: Add bindable property for line spacing
+    // TODO: Add bindable property for circle offset
+    // TODO: Add bindable property for text font
+    // TODO: Add bindable property for text color
+    // TODO: Cleanup rendering code
+    // TODO: Add support for changing text positioning
+    // TODO: True center text
+    private void RenderLabels(SKCanvas canvas)
     {
-        _chartBounds = value;
-        _chartBoundsCenter = new(_chartBounds.Width.Halved(), _chartBounds.Height.Halved());
+        if (_internalEntries.Length == 0)
+        {
+            return;
+        }
+
+        float textSize = 20f;
+        float lineSpacing = 10f;
+        float circleRadius = textSize.Halved();
+        float circleOffset = 20f;
+
+        ColorSelector colorSelector = new(EntryColors);
+        SKPaint textPaint = SKPaints.Text(Colors.Yellow, textSize);
+        float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * lineSpacing;
+        float startY = _textBounds.MidY - totalTextHeight / 2;
+
+        for (int i = 0; i < _internalEntries.Length; i++)
+        {
+            SKPaint circlePaint = SKPaints.Fill(colorSelector.Next());
+            float y = startY + i * (textPaint.TextSize + lineSpacing);
+            canvas.DrawText(_internalEntries[i].Label, _textBounds.MidX, y, textPaint);
+            canvas.DrawCircle(_textBounds.MidX - circleOffset, y - circleRadius.Halved(), circleRadius, circlePaint);
+        }
     }
 
     private InternalDataEntry[] ValidateAndPrepareEntries()
@@ -302,9 +351,9 @@ public class DonutChartView : SKCanvasView
             return [];
         }
 
-        _entryType = entries[0].GetType();
+        Type entryType = entries[0].GetType();
 
-        if (entries.Any(a => a.GetType() != _entryType))
+        if (entries.Any(a => a.GetType() != entryType))
         {
             throw new ArgumentException("All entries must be of the same type.");
         }
@@ -314,23 +363,25 @@ public class DonutChartView : SKCanvasView
         try
         {
             // NOTE: Using compiled expressions rather than reflection to increase performance for accessing properties dynamically
-            _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(_entryType, EntryValuePath);
+            _entryValueAccessor ??= Expressions.CreatePropertyAccessor<float>(entryType, EntryValuePath);
+            _entryLabelAccessor ??= Expressions.CreatePropertyAccessor<string>(entryType, EntryLabelPath);
 
             foreach (object entry in EntriesSource)
             {
                 dataEntries.Add(new InternalDataEntry()
                 {
-                    Value = _entryValueAccessor(entry)
+                    Value = _entryValueAccessor(entry),
+                    Label = _entryLabelAccessor(entry)
                 });
             }
         }
         catch (InvalidCastException)
         {
-            throw new ArgumentException("Expected value to be a float.");
+            throw new ArgumentException($"{EntryValuePath} is expected to be a float, and {EntryLabelPath} is expected to be a string.");
         }
         catch
         {
-            throw new ArgumentException($"Could not find property {EntryValuePath} on Entry type.");
+            throw new ArgumentException($"Could not find a property with the name {EntryValuePath} or {EntryLabelPath} on Entry type.");
         }
 
         return [.. dataEntries];

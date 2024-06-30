@@ -10,6 +10,19 @@ internal class MockDataService
     private readonly float _maxValue = 200f;
     private readonly int _minResultCount = 1;
     private readonly int _maxResultCount = 10;
+    private readonly string[] _categories = 
+    [
+        "English",
+        "Mathematics",
+        "Science",
+        "Geography",
+        "History",
+        "Technology",
+        "Sports",
+        "Music",
+        "Drama",
+        "Languages"
+    ];
 
     #endregion
 
@@ -25,7 +38,8 @@ internal class MockDataService
         {
             testResults.Add(new TestResult()
             {
-                Score = GetRandomScore(random)
+                Score = GetRandomScore(random),
+                Category = _categories[i]
             });
         }
 

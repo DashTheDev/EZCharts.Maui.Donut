@@ -5,17 +5,24 @@ namespace Maui.DonutChart.Helpers;
 // Original version: https://github.com/mono/SkiaSharp/blob/322baee72a018a889e85fc48b42cde9764797dae/source/SkiaSharp.Extended/SkiaSharp.Extended.Shared/SKGeometry.cs#L19-L79
 internal static class SKGeometry
 {
-    internal static SKPath CreateSectorPath(float startPercentage, float endPercentage, float outerRadius, float innerRadius, float rotationDegrees)
+    internal static SKPath CreateSectorPath(
+        float centerX,
+        float centerY,
+        float startPercentage,
+        float endPercentage,
+        float outerRadius,
+        float innerRadius,
+        float rotationDegrees)
     {
         bool isFullCircle = endPercentage - startPercentage == 1;
         float startAngle = GetDegrees(startPercentage, rotationDegrees);
         float endAngle = GetDegrees(endPercentage, rotationDegrees);
         float sweepAngle = endAngle - startAngle;
 
-        SKRect outerRect = new(-outerRadius, -outerRadius, outerRadius, outerRadius);
-        SKRect innerRect = new(-innerRadius, -innerRadius, innerRadius, innerRadius);
-        SKPoint outerStartPoint = GetCirclePoint(outerRadius, GetRadians(startAngle));
-        SKPoint innerEndPoint = GetCirclePoint(innerRadius, GetRadians(endAngle));
+        SKRect outerRect = GetRadiusRect(centerX, centerY, outerRadius);
+        SKRect innerRect = GetRadiusRect(centerX, centerY, innerRadius);
+        SKPoint outerStartPoint = GetCirclePoint(centerX, centerY, outerRadius, GetRadians(startAngle));
+        SKPoint innerEndPoint = GetCirclePoint(centerX, centerY, innerRadius, GetRadians(endAngle));
 
         SKPath path = new();
         path.MoveTo(outerStartPoint);
@@ -43,15 +50,19 @@ internal static class SKGeometry
         return path;
     }
 
-    internal static SKPoint GetCirclePoint(float radius, float angle)
-        => new(radius * MathF.Cos(angle), radius * MathF.Sin(angle));
+    private static float GetDegrees(float percentage, float rotationDegrees)
+        => percentage * 360 - rotationDegrees;
 
-    internal static SKPoint ReverseTransformations(SKPoint point, SKPoint translation, float scale = 1)
-        => new((point.X - translation.X) / scale, (point.Y - translation.Y) / scale);
-
-    internal static float GetRadians(float degrees)
+    private static float GetRadians(float degrees)
         => degrees * MathF.PI / 180;
 
-    internal static float GetDegrees(float percentage, float rotationDegrees) 
-        => percentage * 360 - rotationDegrees;
+    private static SKRect GetRadiusRect(float centerX, float centerY, float radius)
+        => new(centerX - radius, 
+            centerY - radius,
+            centerX + radius, 
+            centerY + radius);
+
+    private static SKPoint GetCirclePoint(float centerX, float centerY, float radius, float angleRadians)
+        => new(centerX + radius * MathF.Cos(angleRadians),
+            centerY + radius * MathF.Sin(angleRadians));
 }

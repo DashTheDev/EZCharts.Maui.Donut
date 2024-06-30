@@ -3,5 +3,5 @@
 internal class TestResult
 {
     internal float Score { get; set; }
-    internal string Categrory { get; set; } = string.Empty;
+    internal string Category { get; set; } = string.Empty;
 }
