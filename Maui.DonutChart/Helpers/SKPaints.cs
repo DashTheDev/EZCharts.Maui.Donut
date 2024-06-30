@@ -20,10 +20,11 @@ internal static class SKPaints
         Color = GetSKColor(color)
     };
 
-    internal static SKPaint Text(Color? color = null, float size = 10) => new()
-    {
+    internal static SKPaint Text(string? fontFamily = null, Color? color = null, float size = 10) => new()
+    {   
         IsAntialias = true,
         TextSize = size,
+        Typeface = SKTypeface.FromFamilyName(fontFamily) ?? SKTypeface.Default,
         TextAlign = SKTextAlign.Left,
         Color = GetSKColor(color)
     };

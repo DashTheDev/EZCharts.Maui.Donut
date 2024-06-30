@@ -138,7 +138,7 @@ public class DonutChartView : SKCanvasView
         nameof(ChartRotationDegrees),
         typeof(float),
         typeof(DonutChartView),
-        defaultValue: 90f,
+        defaultValue: Constants.DefaultChartRotationDegrees,
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
@@ -156,7 +156,7 @@ public class DonutChartView : SKCanvasView
         nameof(ChartOuterRadius),
         typeof(float),
         typeof(DonutChartView),
-        defaultValue: 250f,
+        defaultValue: Constants.DefaultChartOuterRadius,
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
@@ -174,7 +174,7 @@ public class DonutChartView : SKCanvasView
         nameof(ChartInnerRadius),
         typeof(float),
         typeof(DonutChartView),
-        defaultValue: 125f,
+        defaultValue: Constants.DefaultChartInnerRadius,
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
@@ -185,6 +185,96 @@ public class DonutChartView : SKCanvasView
     {
         get => (float)GetValue(ChartInnerRadiusProperty);
         set => SetValue(ChartInnerRadiusProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelFontColor"/>.</summary>
+    public static readonly BindableProperty LabelFontFamilyProperty = BindableProperty.Create(
+        nameof(LabelFontFamily),
+        typeof(string),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelFontFamily,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the system font family used for the chart labels.<br/><br/>
+    /// This is a bindable property which defaults to <c>"Arial"</c>.
+    /// </summary>
+    public string LabelFontFamily
+    {
+        get => (string)GetValue(LabelFontFamilyProperty);
+        set => SetValue(LabelFontFamilyProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelFontColor"/>.</summary>
+    public static readonly BindableProperty LabelFontColorProperty = BindableProperty.Create(
+        nameof(LabelFontColor),
+        typeof(Color),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelFontColor,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the color of the font used for the chart labels.<br/><br/>
+    /// This is a bindable property which defaults to <c>White</c>.
+    /// </summary>
+    public Color LabelFontColor
+    {
+        get => (Color)GetValue(LabelFontColorProperty);
+        set => SetValue(LabelFontColorProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelFontSize"/>.</summary>
+    public static readonly BindableProperty LabelFontSizeProperty = BindableProperty.Create(
+        nameof(LabelFontSize),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelFontSize,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the size of the font used for the chart labels.<br/><br/>
+    /// This is a bindable property which defaults to <c>20f</c>.
+    /// </summary>
+    public float LabelFontSize
+    {
+        get => (float)GetValue(LabelFontSizeProperty);
+        set => SetValue(LabelFontSizeProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelSpacing"/>.</summary>
+    public static readonly BindableProperty LabelSpacingProperty = BindableProperty.Create(
+        nameof(LabelSpacing),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelSpacing,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the spacing between each chart label.<br/><br/>
+    /// This is a bindable property which defaults to <c>10f</c>.
+    /// </summary>
+    public float LabelSpacing
+    {
+        get => (float)GetValue(LabelSpacingProperty);
+        set => SetValue(LabelSpacingProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelColorOffset"/>.</summary>
+    public static readonly BindableProperty LabelColorOffsetProperty = BindableProperty.Create(
+        nameof(LabelColorOffset),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelColorOffset,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the horizontal offset of the color circles rendered next to each label.<br/><br/>
+    /// This is a bindable property which defaults to <c>20f</c>.
+    /// </summary>
+    public float LabelColorOffset
+    {
+        get => (float)GetValue(LabelColorOffsetProperty);
+        set => SetValue(LabelColorOffsetProperty, value);
     }
 
     #endregion
@@ -308,11 +398,6 @@ public class DonutChartView : SKCanvasView
         }
     }
 
-    // TODO: Add bindable property for text size
-    // TODO: Add bindable property for line spacing
-    // TODO: Add bindable property for circle offset
-    // TODO: Add bindable property for text font
-    // TODO: Add bindable property for text color
     // TODO: Cleanup rendering code
     // TODO: Add support for changing text positioning
     // TODO: True center text
@@ -323,22 +408,19 @@ public class DonutChartView : SKCanvasView
             return;
         }
 
-        float textSize = 20f;
-        float lineSpacing = 10f;
-        float circleRadius = textSize.Halved();
-        float circleOffset = 20f;
-
         ColorSelector colorSelector = new(EntryColors);
-        SKPaint textPaint = SKPaints.Text(Colors.Yellow, textSize);
-        float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * lineSpacing;
+        SKPaint textPaint = SKPaints.Text(LabelFontFamily, LabelFontColor, LabelFontSize);
+        float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * LabelSpacing;
         float startY = _textBounds.MidY - totalTextHeight / 2;
+        float circleRadius = LabelFontSize.Halved();
+        float circleRadiusHalved = circleRadius.Halved();
 
         for (int i = 0; i < _internalEntries.Length; i++)
         {
             SKPaint circlePaint = SKPaints.Fill(colorSelector.Next());
-            float y = startY + i * (textPaint.TextSize + lineSpacing);
+            float y = startY + i * (textPaint.TextSize + LabelSpacing);
             canvas.DrawText(_internalEntries[i].Label, _textBounds.MidX, y, textPaint);
-            canvas.DrawCircle(_textBounds.MidX - circleOffset, y - circleRadius.Halved(), circleRadius, circlePaint);
+            canvas.DrawCircle(_textBounds.MidX - LabelColorOffset, y - circleRadiusHalved, circleRadius, circlePaint);
         }
     }
 
