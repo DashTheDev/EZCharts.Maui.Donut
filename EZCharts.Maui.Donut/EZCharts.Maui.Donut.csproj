@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\common.props" />
+
+	<PropertyGroup>
+		<Title>EZCharts.Maui.Donut</Title>
+		<PackageId>EZCharts.Maui.Donut</PackageId>
+		<Version>0.0.1</Version>
+		<RepositoryUrl>https://github.com/DashTheDev/EZCharts.Maui.Donut</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/DashTheDev/EZCharts.Maui.Donut</PackageProjectUrl>
+		<PackageTags>donut,chart,data,.net,maui,cross-platform,windows,ios,android</PackageTags>
+		<PackageIcon>Icon.png</PackageIcon>
+		<NeutralLanguage>en-AU</NeutralLanguage>
+		<Authors>Dashiel Myers</Authors>
+		<Copyright>Copyright (c) Dashiel Myers 2024.</Copyright>
+		<Description>A .NET MAUI control library built on top of SkiaSharp that renders simple and customisable donut charts.</Description>
+		<PackageReleaseNotes>Full changelog can be found at https://github.com/DashTheDev/EZCharts.Maui.Donut/releases.</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\Media\Icon.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<!-- Android -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+		<Compile Remove="**\*.Android.cs" />
+		<None Include="**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<!-- iOS -->
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
+		<Compile Remove="**\*.iOS.cs" />
+		<None Include="**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<!-- Windows -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
+		<Compile Remove="**\*.Windows.cs" />
+		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
+	</ItemGroup>
+
+</Project>

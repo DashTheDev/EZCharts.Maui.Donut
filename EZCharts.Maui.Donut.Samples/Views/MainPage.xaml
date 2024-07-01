@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="EZCharts.Maui.Donut.Samples.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:EZCharts.Maui.Donut.Samples.ViewModels"
+    x:DataType="vm:MainViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <Grid
+        HorizontalOptions="Center"
+        RowDefinitions="40,50"
+        VerticalOptions="Center">
+        <Label Text="EZCharts.Maui.Donut" />
+        <Button
+            Grid.Row="1"
+            Command="{Binding ViewSampleCommand}"
+            Text="View Sample" />
+    </Grid>
+
+</ContentPage>

@@ -1,20 +1,21 @@
-# 🍩 MauiCharts.Donut
-![NuGet Version](https://img.shields.io/nuget/v/MauiCharts.Donut)
-![GitHub License](https://img.shields.io/github/license/DashTheDev/MauiCharts.Donut)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/DashTheDev/MauiCharts.Donut)
+# 🍩 EZCharts.Maui.Donut
+![NuGet Version](https://img.shields.io/nuget/v/EZCharts.Maui.Donut)
+![GitHub License](https://img.shields.io/github/license/DashTheDev/EZCharts.Maui.Donut)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/DashTheDev/EZCharts.Maui.Donut)
 
 Rendering donut charts in .NET MAUI just got a whole lot easier!
 
-MauiCharts.Donut is a control library built on top of [SkiaSharp](https://github.com/mono/SkiaSharp), dedicated to creating a developer friendly and feature rich cross-platform donut chart component. The goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart view that they can implement into their applications with minimal setup.
+EZCharts.Maui.Donut is a control library built on top of [SkiaSharp](https://github.com/mono/SkiaSharp), dedicated to creating a developer friendly and feature rich cross-platform donut chart component. The goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart view that they can implement into their applications with minimal setup.
 
 ## 🖼️ Samples
-A [sample project](/MauiCharts.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
+A [sample project](/EZCharts.Maui.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
 
 More detailed samples and documentation coming soon!
+
 ![Sample Animation](/Media/Sample.gif)
 
 ## 🔧 Setting Up
-1. Install package via [NuGet](https://www.nuget.org/packages/CardsView.Maui).
+1. Install package via [NuGet](https://www.nuget.org/packages/EZCharts.Maui.Donut).
 2. Add `UseDonutChart()` to your `CreateMauiApp()` in `MauiProgram.cs`.
 
     ```cs
@@ -40,7 +41,7 @@ More detailed samples and documentation coming soon!
 3. Add the `xmlns` namespace and `DonutChartView` to your XAML view. 
 
     ```xaml
-    <YourView xmlns:donut="http://schemas.dashthedev.com/maui-charts/donut">
+    <YourView xmlns:donut="http://schemas.dashthedev.com/ez-charts/maui/donut">
         <donut:DonutChartView />
     </YourView>
     ```
