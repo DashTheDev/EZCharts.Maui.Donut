@@ -1,10 +1,10 @@
-# SimplyCharts.DonutChart
+# MauiCharts.Donut
 
 ![DonutChart Logo](path/to/logo.png)
 
-## 🍩 About SimplyCharts.DonutChart
+## 🍩 About MauiCharts.Donut
 
-SimplyCharts.DonutChart is a focused fork of the [MicroCharts](https://github.com/microcharts-dotnet/Microcharts) library, dedicated to creating a robust and feature-rich donut chart component for .NET MAUI applications. Our goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart solution.
+MauiCharts.Donut is a focused fork of the [MicroCharts](https://github.com/microcharts-dotnet/Microcharts) library, dedicated to creating a robust and feature-rich donut chart component for .NET MAUI applications. Our goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart solution.
 
 ## 🚀 Recent Improvements
 
@@ -18,7 +18,7 @@ These changes lay the groundwork for more advanced features and optimisations in
 
 ## 🎯 Roadmap
 
-Our vision for SimplyCharts.DonutChart includes:
+Our vision for MauiCharts.Donut includes:
 
 - [ ] Implementing advanced hit-testing for improved interactivity
 - [ ] Adding animation support for smooth data transitions
@@ -29,14 +29,14 @@ Our vision for SimplyCharts.DonutChart includes:
 ## 📦 Installation
 
 ```bash
-dotnet add package SimplyCharts.DonutChart# Maui.DonutChart
+dotnet add package MauiCharts.Donut# MauiCharts.Donut
 
 🔧 Usage
-Here's a quick example of how to use SimplyCharts.DonutChart in your XAML:
+Here's a quick example of how to use MauiCharts.Donut in your XAML:
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sc="clr-namespace:SimplyCharts.DonutChart;assembly=SimplyCharts.DonutChart"
+             xmlns:sc="clr-namespace:MauiCharts.Donut;assembly=MauiCharts.Donut"
              x:Class="YourNamespace.MainPage">
 
     <sc:DonutChartView Data="{Binding YourData}"
@@ -47,7 +47,7 @@ Here's a quick example of how to use SimplyCharts.DonutChart in your XAML:
 </ContentPage>
 ```
 🤝 Contributing
-We welcome contributions! If you'd like to help improve SimplyCharts.DonutChart, please:
+We welcome contributions! If you'd like to help improve MauiCharts.Donut, please:
 
 Fork the repository
 Create your feature branch (git checkout -b feature/AmazingFeature)
@@ -59,4 +59,4 @@ Open a Pull Request
 This project is licensed under the MIT License - see the LICENSE.md file for details.
 📬 Contact
 Dash -
-Project Link: https://github.com/Dash/SimplyCharts.DonutChart
+Project Link: https://github.com/Dash/MauiCharts.Donut
