@@ -1,6 +1,6 @@
 # 🍩 EZCharts.Maui.Donut
 ![NuGet Version](https://img.shields.io/nuget/v/EZCharts.Maui.Donut)
-![GitHub License](https://img.shields.io/github/license/DashTheDev/EZCharts.Maui.Donut)
+![GitHub License](https://img.shields.io/github/license/DashTheDev/EZCharts.Maui.Donut?style=flat)
 ![GitHub Last Commit](https://img.shields.io/github/last-commit/DashTheDev/EZCharts.Maui.Donut)
 
 Rendering donut charts in .NET MAUI just got a whole lot easier!
@@ -12,7 +12,7 @@ A [sample project](/EZCharts.Maui.Donut.Samples) can be found in the repository 
 
 More detailed samples and documentation coming soon!
 
-![Sample Animation](/Media/Sample.gif)
+![Sample Animation](https://raw.githubusercontent.com/DashTheDev/EZCharts.Maui.Donut/master/Media/Sample.gif)
 
 ## 🔧 Setting Up
 1. Install package via [NuGet](https://www.nuget.org/packages/EZCharts.Maui.Donut).
