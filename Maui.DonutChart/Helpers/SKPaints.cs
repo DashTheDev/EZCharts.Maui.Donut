@@ -29,6 +29,6 @@ internal static class SKPaints
         Color = GetSKColor(color)
     };
 
-    private static SKColor GetSKColor(Color? color)
+    internal static SKColor GetSKColor(Color? color)
         => color?.ToSKColor() ?? SKColor.Empty;
 }

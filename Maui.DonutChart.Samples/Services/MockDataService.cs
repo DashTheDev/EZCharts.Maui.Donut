@@ -6,7 +6,7 @@ internal class MockDataService
 {
     #region Fields
 
-    private readonly float _minValue = 0f;
+    private readonly float _minValue = 15f;
     private readonly float _maxValue = 200f;
     private readonly int _minResultCount = 1;
     private readonly int _maxResultCount = 10;

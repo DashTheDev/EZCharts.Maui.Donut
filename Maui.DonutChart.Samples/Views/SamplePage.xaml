@@ -40,7 +40,9 @@
             EntryClicked="OnEntryClicked"
             EntryColors="{StaticResource ChartColors}"
             EntryLabelPath="Category"
-            EntryValuePath="Score" />
+            EntryValuePath="Score"
+            LabelStyle="Outside"
+            LabelUseAutoFontColor="True" />
 
         <!--  Example without MVVM Entries source  -->
         <!--<donut:DonutChartView

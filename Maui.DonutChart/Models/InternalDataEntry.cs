@@ -1,8 +1,6 @@
-﻿using SkiaSharp;
-
-namespace Maui.DonutChart.Models;
+﻿namespace Maui.DonutChart.Models;
 
 internal class InternalDataEntry : DataEntry
 {
-    internal SKPath? Path { get; set; }
+    internal SKSectorPath? SectorPath { get; set; }
 }

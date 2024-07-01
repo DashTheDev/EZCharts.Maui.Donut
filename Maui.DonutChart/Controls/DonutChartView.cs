@@ -3,13 +3,16 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Maui.DonutChart.Helpers;
 using Maui.DonutChart.Models;
-using Microsoft.Maui.Controls.Shapes;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
 namespace Maui.DonutChart.Controls;
 
+/// <summary>
+/// A highly customisable <see cref="SKCanvasView"/> tailored to displaying
+/// data in a donut segmented chart.
+/// </summary>
 [ContentProperty(nameof(EntriesSource))]
 public class DonutChartView : SKCanvasView, IPadding
 {
@@ -21,7 +24,7 @@ public class DonutChartView : SKCanvasView, IPadding
     private InternalDataEntry[] _internalEntries = [];
     private SKRect _canvasBounds = SKRect.Empty;
     private SKRect _chartBounds = SKRect.Empty;
-    private SKRect _textBounds = SKRect.Empty;
+    private SKRect? _textBounds = SKRect.Empty;
 
     #endregion
 
@@ -208,6 +211,24 @@ public class DonutChartView : SKCanvasView, IPadding
         set => SetValue(ChartInnerRadiusProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="LabelStyle"/>.</summary>
+    public static readonly BindableProperty LabelStyleProperty = BindableProperty.Create(
+        nameof(LabelStyle),
+        typeof(LabelStyle),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelStyle,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the style to be used for chart labels.<br/><br/>
+    /// This is a bindable property which defaults to <b><see cref="LabelStyle.Key"/></b>.
+    /// </summary>
+    public LabelStyle LabelStyle
+    {
+        get => (LabelStyle)GetValue(LabelStyleProperty);
+        set => SetValue(LabelStyleProperty, value);
+    }
+
     /// <summary>Bindable property for <see cref="LabelFontColor"/>.</summary>
     public static readonly BindableProperty LabelFontFamilyProperty = BindableProperty.Create(
         nameof(LabelFontFamily),
@@ -235,13 +256,32 @@ public class DonutChartView : SKCanvasView, IPadding
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the color of the font used for the chart labels.<br/><br/>
+    /// Gets or sets the color of the font used for the chart labels.<br/>
+    /// This value will be ignored if <c>LabelUseAutoFontColor</c> is set to <b><see langword="true"/></b>.<br/><br/>
     /// This is a bindable property which defaults to <c>White</c>.
     /// </summary>
     public Color LabelFontColor
     {
         get => (Color)GetValue(LabelFontColorProperty);
         set => SetValue(LabelFontColorProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelUseAutoFontColor"/>.</summary>
+    public static readonly BindableProperty LabelUseAutoFontColorProperty = BindableProperty.Create(
+        nameof(LabelUseAutoFontColor),
+        typeof(bool),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelUseAutoFontColor,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets if the label font colors will be assigned based on their corresponding entry color.<br/><br/>
+    /// This is a bindable property which defaults to <b><see langword="false"/></b>.
+    /// </summary>
+    public bool LabelUseAutoFontColor
+    {
+        get => (bool)GetValue(LabelUseAutoFontColorProperty);
+        set => SetValue(LabelUseAutoFontColorProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="LabelFontSize"/>.</summary>
@@ -262,40 +302,61 @@ public class DonutChartView : SKCanvasView, IPadding
         set => SetValue(LabelFontSizeProperty, value);
     }
 
-    /// <summary>Bindable property for <see cref="LabelSpacing"/>.</summary>
-    public static readonly BindableProperty LabelSpacingProperty = BindableProperty.Create(
-        nameof(LabelSpacing),
+    /// <summary>Bindable property for <see cref="LabelKeySpacing"/>.</summary>
+    public static readonly BindableProperty LabelKeySpacingProperty = BindableProperty.Create(
+        nameof(LabelKeySpacing),
         typeof(float),
         typeof(DonutChartView),
-        defaultValue: Constants.DefaultLabelSpacing,
+        defaultValue: Constants.DefaultLabelKeySpacing,
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the spacing between each chart label.<br/><br/>
+    /// Gets or sets the spacing between each chart label.<br/>
+    /// This value is only applied when <c>LabelStyle</c> is set to <b><see cref="LabelStyle.Key"/></b>.<br/><br/>
     /// This is a bindable property which defaults to <c>10f</c>.
     /// </summary>
-    public float LabelSpacing
+    public float LabelKeySpacing
     {
-        get => (float)GetValue(LabelSpacingProperty);
-        set => SetValue(LabelSpacingProperty, value);
+        get => (float)GetValue(LabelKeySpacingProperty);
+        set => SetValue(LabelKeySpacingProperty, value);
     }
 
-    /// <summary>Bindable property for <see cref="LabelColorOffset"/>.</summary>
-    public static readonly BindableProperty LabelColorOffsetProperty = BindableProperty.Create(
-        nameof(LabelColorOffset),
+    /// <summary>Bindable property for <see cref="LabelKeyColorOffset"/>.</summary>
+    public static readonly BindableProperty LabelKeyColorOffsetProperty = BindableProperty.Create(
+        nameof(LabelKeyColorOffset),
         typeof(float),
         typeof(DonutChartView),
-        defaultValue: Constants.DefaultLabelColorOffset,
+        defaultValue: Constants.DefaultLabelKeyColorOffset,
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the horizontal offset of the color circles rendered next to each label.<br/><br/>
+    /// Gets or sets the horizontal offset of the color circles rendered next to each label.<br/>
+    /// This value is only applied when <c>LabelStyle</c> is set to <b><see cref="LabelStyle.Key"/></b>.<br/><br/>
     /// This is a bindable property which defaults to <c>20f</c>.
     /// </summary>
-    public float LabelColorOffset
+    public float LabelKeyColorOffset
     {
-        get => (float)GetValue(LabelColorOffsetProperty);
-        set => SetValue(LabelColorOffsetProperty, value);
+        get => (float)GetValue(LabelKeyColorOffsetProperty);
+        set => SetValue(LabelKeyColorOffsetProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="LabelOutsideRadius"/>.</summary>
+    public static readonly BindableProperty LabelOutsideRadiusProperty = BindableProperty.Create(
+        nameof(LabelOutsideRadius),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: Constants.DefaultLabelOutsideRadius,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the radius from the <c>ChartOuterRadius</c> where the outside labels will be rendered.<br/>
+    /// This value is only applied when <c>LabelStyle</c> is set to <b><see cref="LabelStyle.Outside"/></b>.<br/><br/>
+    /// This is a bindable property which defaults to <c>50f</c>.
+    /// </summary>
+    public float LabelOutsideRadius
+    {
+        get => (float)GetValue(LabelOutsideRadiusProperty);
+        set => SetValue(LabelOutsideRadiusProperty, value);
     }
 
     #endregion
@@ -362,7 +423,7 @@ public class DonutChartView : SKCanvasView, IPadding
 
         foreach (InternalDataEntry entry in _internalEntries)
         {
-            if (entry.Path is not null && entry.Path.Contains(e.Location.X, e.Location.Y))
+            if (entry.SectorPath is not null && entry.SectorPath.Contains(e.Location.X, e.Location.Y))
             {
                 EntryClicked?.Invoke(this, entry.Value);
             }
@@ -377,14 +438,30 @@ public class DonutChartView : SKCanvasView, IPadding
     {
         canvas.Clear();
 
-        _canvasBounds = new(0, 0, width, height);
-        _chartBounds = SKGeometry.CreatePaddedRect(0, 0, width * 0.75f, height, Padding);
-        _textBounds = SKGeometry.CreatePaddedRect(_chartBounds.Width, 0, width, height, Padding);
         _internalEntries = ValidateAndPrepareEntries();
+        _canvasBounds = new(0, 0, width, height);
+        _chartBounds = CreateChartBounds();
+        _textBounds = CreateTextBounds();
 
         RenderBackground(canvas);
         RenderValues(canvas);
         RenderLabels(canvas);
+    }
+
+    private SKRect CreateChartBounds()
+    {
+        float width = LabelStyle == LabelStyle.Key ? _canvasBounds.Width * 0.75f : _canvasBounds.Width;
+        return SKGeometry.CreatePaddedRect(0, 0, width, _canvasBounds.Height, Padding);
+    }
+
+    private SKRect? CreateTextBounds()
+    {
+        if (LabelStyle == LabelStyle.Outside)
+        {
+            return null;
+        }
+
+        return SKGeometry.CreatePaddedRect(_chartBounds.Width, 0, _canvasBounds.Width, _canvasBounds.Height, Padding);
     }
 
     private void RenderBackground(SKCanvas canvas)
@@ -401,7 +478,7 @@ public class DonutChartView : SKCanvasView, IPadding
             return;
         }
 
-        ColorSelector colorSelector = new(EntryColors);
+        ColorSelector entryColorSelector = new(EntryColors);
         float totalValue = _internalEntries.Sum(a => a.Value);
         float percentageFilled = 0.0f;
 
@@ -411,19 +488,20 @@ public class DonutChartView : SKCanvasView, IPadding
 
         foreach (InternalDataEntry entry in _internalEntries)
         {
-            SKPaint paint = SKPaints.Fill(colorSelector.Next());
+            SKPaint paint = SKPaints.Fill(entryColorSelector.Next());
 
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.Path = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, outerRadius, innerRadius, ChartRotationDegrees);
-            canvas.DrawPath(entry.Path, paint);
+            entry.SectorPath = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, outerRadius, innerRadius, ChartRotationDegrees);
+            canvas.DrawPath(entry.SectorPath, paint);
 
             percentageFilled = targetPercentageFilled;
         }
     }
 
     // TODO: Add support for changing text positioning
+    // TODO: Add support for label template replacements
     private void RenderLabels(SKCanvas canvas)
     {
         if (_internalEntries.Length == 0)
@@ -431,32 +509,80 @@ public class DonutChartView : SKCanvasView, IPadding
             return;
         }
 
-        ColorSelector colorSelector = new(EntryColors);
         SKPaint textPaint = SKPaints.Text(LabelFontFamily, LabelFontColor, LabelFontSize);
-        float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * LabelSpacing;
-        float circleRadius = LabelFontSize.Halved();
-        float circleRadiusHalved = circleRadius.Halved();
-        float maxWidth = 0;
+        ColorSelector entryColorSelector = new(EntryColors);
 
-        foreach (InternalDataEntry entry in _internalEntries)
+        switch (LabelStyle)
         {
-            float lineWidth = textPaint.MeasureText(entry.Label);
+            case LabelStyle.Key:
+                RenderKeyLabels(canvas, textPaint, entryColorSelector);
+                break;
 
-            if (lineWidth > maxWidth)
-            {
-                maxWidth = lineWidth;
-            }
+            default:
+                RenderOutsideLabels(canvas, textPaint, entryColorSelector);
+                break;
+        };
+    }
+
+    private void RenderKeyLabels(SKCanvas canvas, SKPaint textPaint, ColorSelector entryColorSelector)
+    {
+        // Text bounds should be set if LabelStyle is key, but we need to be safe
+        if (_textBounds is null)
+        {
+            return;
         }
 
-        float startX = _textBounds.Left + (_textBounds.Width - maxWidth) / 2 + LabelColorOffset;
-        float startY = _textBounds.MidY - totalTextHeight / 2;
+        float totalTextHeight = _internalEntries.Length * textPaint.TextSize + (_internalEntries.Length - 1) * LabelKeySpacing;
+        float circleRadius = LabelFontSize.Halved();
+        float circleRadiusHalved = circleRadius.Halved();
+        float maxWidth = _internalEntries
+            .Select(e => textPaint.MeasureText(e.Label))
+            .Max();
+
+        float startX = _textBounds.Value.Left + (_textBounds.Value.Width - maxWidth) / 2 + LabelKeyColorOffset;
+        float startY = _textBounds.Value.MidY - totalTextHeight / 2;
 
         for (int i = 0; i < _internalEntries.Length; i++)
         {
-            SKPaint circlePaint = SKPaints.Fill(colorSelector.Next());
-            float y = startY + i * (textPaint.TextSize + LabelSpacing);
+            Color entryColor = entryColorSelector.Next();
+
+            if (LabelUseAutoFontColor)
+            {
+                textPaint.SetColor(entryColor);
+            }
+
+            SKPaint circlePaint = SKPaints.Fill(entryColor);
+            float y = startY + i * (textPaint.TextSize + LabelKeySpacing);
             canvas.DrawText(_internalEntries[i].Label, startX, y, textPaint);
-            canvas.DrawCircle(startX - LabelColorOffset, y - circleRadiusHalved, circleRadius, circlePaint);
+            canvas.DrawCircle(startX - LabelKeyColorOffset, y - circleRadiusHalved, circleRadius, circlePaint);
+        }
+    }
+
+    private void RenderOutsideLabels(SKCanvas canvas, SKPaint textPaint, ColorSelector entryColorSelector)
+    {
+        float labelOutsideRadius = ChartOuterRadius + LabelOutsideRadius;
+
+        foreach (InternalDataEntry entry in _internalEntries.Where(e => e.SectorPath is not null))
+        {
+            if (LabelUseAutoFontColor)
+            {
+                Color entryColor = entryColorSelector.Next();
+                textPaint.SetColor(entryColor);
+            }
+
+            SKPoint sectorMidpoint = SKGeometry.GetSectorMidpoint(entry.SectorPath!, labelOutsideRadius);
+
+            if (_internalEntries.Length == 1)
+            {
+                textPaint.TextAlign = SKTextAlign.Center;
+            }
+            else
+            {
+                bool shouldAlignRight = sectorMidpoint.X - entry.SectorPath!.CenterX < 0;
+                textPaint.TextAlign = shouldAlignRight ? SKTextAlign.Right : SKTextAlign.Left;
+            }
+
+            canvas.DrawText(entry.Label, sectorMidpoint, textPaint);
         }
     }
 

@@ -6,7 +6,7 @@ namespace Maui.DonutChart.Helpers;
 // Original version: https://github.com/mono/SkiaSharp/blob/322baee72a018a889e85fc48b42cde9764797dae/source/SkiaSharp.Extended/SkiaSharp.Extended.Shared/SKGeometry.cs#L19-L79
 internal static class SKGeometry
 {
-    internal static SKPath CreateSectorPath(
+    internal static SKSectorPath CreateSectorPath(
         float centerX,
         float centerY,
         float startPercentage,
@@ -25,7 +25,15 @@ internal static class SKGeometry
         SKPoint outerStartPoint = GetCirclePoint(centerX, centerY, outerRadius, GetRadians(startAngle));
         SKPoint innerEndPoint = GetCirclePoint(centerX, centerY, innerRadius, GetRadians(endAngle));
 
-        SKPath path = new();
+        SKSectorPath path = new()
+        {
+            CenterX = centerX,
+            CenterY = centerY,
+            StartPercentage = startPercentage,
+            EndPercentage = endPercentage,
+            RotationDegrees = rotationDegrees
+        };
+
         path.MoveTo(outerStartPoint);
 
         if (isFullCircle)
@@ -49,6 +57,14 @@ internal static class SKGeometry
 
         path.Close();
         return path;
+    }
+
+    internal static SKPoint GetSectorMidpoint(SKSectorPath sectorPath, float radius)
+    {
+        float middlePercentage = (sectorPath.StartPercentage + sectorPath.EndPercentage) / 2;
+        float middleAngle = GetDegrees(middlePercentage, sectorPath.RotationDegrees);
+        float middleRadians = GetRadians(middleAngle);
+        return GetCirclePoint(sectorPath.CenterX, sectorPath.CenterY, radius, middleRadians);
     }
 
     internal static SKRect CreatePaddedRect(float left, float top, float width, float height, Thickness padding)
