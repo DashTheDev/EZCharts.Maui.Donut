@@ -16,6 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiCharts.Donut.Samples", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiCharts.Donut", "MauiCharts.Donut\MauiCharts.Donut.csproj", "{20EFFB72-22BC-4095-B6D6-5294038A9494}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Media", "Media", "{F4FE4592-8236-48E1-BAC8-B2294FE11E3B}"
+	ProjectSection(SolutionItems) = preProject
+		Media\Icon.png = Media\Icon.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F4FE4592-8236-48E1-BAC8-B2294FE11E3B} = {A53374D6-1C72-478F-9876-F9D170C52793}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0682CC5-7A84-4BE6-999A-027BBF9B7DA2}

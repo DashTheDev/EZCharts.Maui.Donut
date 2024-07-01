@@ -1,62 +1,101 @@
-# MauiCharts.Donut
+# 🍩 MauiCharts.Donut
+![NuGet Version](https://img.shields.io/nuget/v/MauiCharts.Donut)
+![GitHub License](https://img.shields.io/github/license/DashTheDev/MauiCharts.Donut)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/DashTheDev/MauiCharts.Donut)
 
-![DonutChart Logo](path/to/logo.png)
+Rendering donut charts in .NET MAUI just got a whole lot easier!
 
-## 🍩 About MauiCharts.Donut
+MauiCharts.Donut is a control library built on top of [SkiaSharp](https://github.com/mono/SkiaSharp), dedicated to creating a developer friendly and feature rich cross-platform donut chart component. The goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart view that they can implement into their applications with minimal setup.
 
-MauiCharts.Donut is a focused fork of the [MicroCharts](https://github.com/microcharts-dotnet/Microcharts) library, dedicated to creating a robust and feature-rich donut chart component for .NET MAUI applications. Our goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart solution.
+## 🖼️ Samples
+A [sample project](/MauiCharts.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
 
-## 🚀 Recent Improvements
+More detailed samples and documentation coming soon!
+![Sample Animation](/Media/Sample.gif)
 
-In our latest update, we've made changes to the core functionality of the DonutChart:
+## 🔧 Setting Up
+1. Install package via [NuGet](https://www.nuget.org/packages/CardsView.Maui).
+2. Add `UseDonutChart()` to your `CreateMauiApp()` in `MauiProgram.cs`.
 
-- **Simplified Sector Rendering**: Improved the `CreateSectorPath` method in `SKGeometry.cs` for more efficient chart rendering.
-- **Enhanced Degree Calculation**: Added a new `GetDegrees` method in `CircleConstants.cs` for more accurate angle calculations.
-- **Refactored DonutChartView**: Updated the `RenderData` method in `DonutChartView.cs` to utilize the new sector path creation logic.
+    ```cs
+    public static class MauiProgram
+    {
+        public static MauiApp CreateMauiApp()
+        {
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>()
+                .UseDonutChart()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
 
-These changes lay the groundwork for more advanced features and optimisations in future releases.
+            return builder.Build();
+        }
+    }
+    ```
 
-## 🎯 Roadmap
+3. Add the `xmlns` namespace and `DonutChartView` to your XAML view. 
 
-Our vision for MauiCharts.Donut includes:
+    ```xaml
+    <YourView xmlns:donut="http://schemas.dashthedev.com/maui-charts/donut">
+        <donut:DonutChartView />
+    </YourView>
+    ```
 
-- [ ] Implementing advanced hit-testing for improved interactivity
-- [ ] Adding animation support for smooth data transitions
-- [ ] Introducing customizable themes and styles
-- [ ] Optimizing performance for large datasets
-- [ ] Enhancing accessibility features
+4. Add entry models (your own or our generic class) via binding, code-behind or XAML. Your choice!
 
-## 📦 Installation
+    #### Binding
+    ```xaml
+    <donut:DonutChartView
+        EntriesSource="{Binding TestResults}"
+        EntryLabelPath="Category"
+        EntryValuePath="Score" />
+    ```
 
-```bash
-dotnet add package MauiCharts.Donut# MauiCharts.Donut
+    #### Code-behind
+    ```xaml
+    <donut:DonutChartView x:Name="MyChartView" />
+    ```
+    
+    ```cs
+    public SamplePage()
+    {
+        InitializeComponent();
 
-🔧 Usage
-Here's a quick example of how to use MauiCharts.Donut in your XAML:
+        MyChartView.EntriesSource = new DataEntry[]
+        {
+            new()
+            {
+                Value = 105,
+                Label = "Pencils Owned"
+            },
+            new()
+            {
+                Value = 234,
+                Label = "Pens Owned"
+            },
+        };
+    }
+    ```
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sc="clr-namespace:MauiCharts.Donut;assembly=MauiCharts.Donut"
-             x:Class="YourNamespace.MainPage">
+    #### XAML
+    ```xaml
+    <donut:DonutChartView>
+        <x:Array Type="{x:Type donut:DataEntry}">
+            <donut:DataEntry Label="English" Value="200" />
+            <donut:DataEntry Label="Mathematics" Value="300" />
+            <donut:DataEntry Label="Geography" Value="325" />
+            <donut:DataEntry Label="Science" Value="50" />
+        </x:Array>
+    </donut:DonutChartView>
+    ```
 
-    <sc:DonutChartView Data="{Binding YourData}"
-                       Colors="{Binding YourColors}"
-                       StrokeWidth="2"
-                       StrokeColor="White" />
+5. Customise to your liking! Options and samples can be found in the [documentation](/) (coming soon).
 
-</ContentPage>
-```
-🤝 Contributing
-We welcome contributions! If you'd like to help improve MauiCharts.Donut, please:
+## 🤝 Contributing
+I work full-time and may not have time to keep things up to date. So if there's something you want to change, then make some contributions! Please read the [contribution guide](/) (coming soon) on how to get started.
 
-Fork the repository
-Create your feature branch (git checkout -b feature/AmazingFeature)
-Commit your changes (git commit -m 'Add some AmazingFeature')
-Push to the branch (git push origin feature/AmazingFeature)
-Open a Pull Request
-
-📄 License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-📬 Contact
-Dash -
-Project Link: https://github.com/Dash/MauiCharts.Donut
+Any contributions are greatly appreciated. :)

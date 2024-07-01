@@ -9,10 +9,12 @@
 		<RepositoryUrl>https://github.com/DashTheDev/MauiCharts.Donut</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/DashTheDev/MauiCharts.Donut</PackageProjectUrl>
 		<PackageTags>donut,chart,data,.net,maui,cross-platform,windows,ios,android</PackageTags>
+		<PackageIcon>Icon.png</PackageIcon>
 		<NeutralLanguage>en-AU</NeutralLanguage>
-		<Authors>DashTheDev</Authors>
-		<Description>A .NET Maui control library that renders donut charts.</Description>
-		<PackageReleaseNotes>Changelog can be found on GitHub.</PackageReleaseNotes>
+		<Authors>Dashiel Myers</Authors>
+		<Copyright>Copyright (c) Dashiel Myers 2024.</Copyright>
+		<Description>A .NET MAUI control library built on top of SkiaSharp that renders simple and customisable donut charts.</Description>
+		<PackageReleaseNotes>Full changelog can be found at https://github.com/DashTheDev/MauiCharts.Donut/releases.</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -20,6 +22,7 @@
 
 	<ItemGroup>
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\Media\Icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<!-- Android -->

@@ -6,7 +6,7 @@
 
 static class XamlConstants
 {
-    public const string XamlNamespace = "http://schemas.dashthedev.com/maui/donut-chart";
+    public const string XamlNamespace = "http://schemas.dashthedev.com/maui-charts/donut";
     public const string Namespace = $"MauiCharts.Donut";
     public const string NamespacePrefix = $"{Namespace}.";
 }
