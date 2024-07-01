@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Windows.Input;
 using Maui.DonutChart.Helpers;
 using Maui.DonutChart.Models;
 using SkiaSharp;
@@ -54,7 +55,7 @@ public class DonutChartView : SKCanvasView, IPadding
     /// <summary>
     /// Raised whenever a segment on the chart is clicked.
     /// </summary>
-    public event EventHandler<float>? EntryClicked;
+    public event EventHandler<EntryClickEventArgs>? EntryClicked;
 
     #endregion
 
@@ -135,6 +136,23 @@ public class DonutChartView : SKCanvasView, IPadding
     {
         get => (Color[])GetValue(EntryColorsProperty);
         set => SetValue(EntryColorsProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="EntryClickedCommand"/>.</summary>
+    public static readonly BindableProperty EntryClickedCommandProperty = BindableProperty.Create(
+        nameof(EntryClickedCommand),
+        typeof(ICommand),
+        typeof(DonutChartView));
+
+    /// <summary>
+    /// Gets or sets the command to be invoked when an entry is clicked.<br/>
+    /// The command will receive an <see langword="object"/> parameter which represents the clicked entry.<br/><br/>
+    /// This is a bindable property which defaults to <b><see langword="null"/></b>.
+    /// </summary>
+    public ICommand? EntryClickedCommand
+    {
+        get => (ICommand?)GetValue(EntryClickedCommandProperty);
+        set => SetValue(EntryClickedCommandProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="Padding"/>.</summary>
@@ -423,9 +441,15 @@ public class DonutChartView : SKCanvasView, IPadding
 
         foreach (InternalDataEntry entry in _internalEntries)
         {
-            if (entry.SectorPath is not null && entry.SectorPath.Contains(e.Location.X, e.Location.Y))
+            if (entry.SectorPath is null || entry.OriginalEntry is null)
             {
-                EntryClicked?.Invoke(this, entry.Value);
+                continue;
+            }
+
+            if (entry.SectorPath.Contains(e.Location.X, e.Location.Y))
+            {
+                EntryClicked?.Invoke(this, new EntryClickEventArgs(entry.OriginalEntry));
+                EntryClickedCommand?.Execute(entry.OriginalEntry);
             }
         }
     }
@@ -614,6 +638,7 @@ public class DonutChartView : SKCanvasView, IPadding
             {
                 dataEntries.Add(new InternalDataEntry()
                 {
+                    OriginalEntry = entry,
                     Value = _entryValueAccessor(entry),
                     Label = _entryLabelAccessor(entry)
                 });

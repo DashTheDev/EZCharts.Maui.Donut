@@ -1,4 +1,5 @@
-﻿using Maui.DonutChart.Samples.Services;
+﻿using CommunityToolkit.Maui;
+using Maui.DonutChart.Samples.Services;
 using Maui.DonutChart.Samples.ViewModels;
 using Maui.DonutChart.Samples.Views;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .UseDonutChart()
             .RegisterViews()
             .RegisterServices()

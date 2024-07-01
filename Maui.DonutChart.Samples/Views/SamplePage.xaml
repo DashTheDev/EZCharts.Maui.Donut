@@ -38,6 +38,7 @@
             ChartRotationDegrees="90"
             EntriesSource="{Binding TestResults}"
             EntryClicked="OnEntryClicked"
+            EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
             EntryLabelPath="Category"
             EntryValuePath="Score"
@@ -52,7 +53,9 @@
             ChartOuterRadius="400"
             ChartRotationDegrees="90"
             EntryClicked="OnEntryClicked"
-            EntryColors="{StaticResource ChartColors}">
+            EntryColors="{StaticResource ChartColors}"
+            LabelStyle="Outside"
+            LabelUseAutoFontColor="True">
             <x:Array Type="{x:Type donut:DataEntry}">
                 <donut:DataEntry Label="English" Value="200" />
                 <donut:DataEntry Label="Mathematics" Value="300" />
