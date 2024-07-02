@@ -5,10 +5,12 @@
 
 Rendering donut charts in .NET MAUI just got a whole lot easier!
 
-EZCharts.Maui.Donut is a control library built on top of [SkiaSharp](https://github.com/mono/SkiaSharp), dedicated to creating a developer friendly and feature rich cross-platform donut chart component. The goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart view that they can implement into their applications with minimal setup.
+**EZCharts.Maui.Donut** is a control library built on top of [SkiaSharp](https://github.com/mono/SkiaSharp) and inspired by [MicroCharts](https://github.com/microcharts-dotnet/Microcharts).
+
+The goal is to provide developers with a highly customizable, efficient, and visually appealing donut chart view that they can implement into their applications with minimal setup.
 
 ## 🖼️ Samples
-A [sample project](/EZCharts.Maui.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
+A [sample project](https://github.com/DashTheDev/EZCharts.Maui.Donut/tree/master/EZCharts.Maui.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
 
 More detailed samples and documentation coming soon!
 
@@ -97,6 +99,6 @@ More detailed samples and documentation coming soon!
 5. Customise to your liking! Options and samples can be found in the [documentation](/) (coming soon).
 
 ## 🤝 Contributing
-I work full-time and may not have time to keep things up to date. So if there's something you want to change, then make some contributions! Please read the [contribution guide](/) (coming soon) on how to get started.
+I work full-time and may not have time to keep things up to date. So if there's something you want to change, then make some contributions! Please read the [contribution guide](https://github.com/DashTheDev/EZCharts.Maui.Donut/blob/master/.github/CONTRIBUTING.md) on how to get started.
 
-Any contributions are greatly appreciated. :)
+Any contributions are greatly appreciated. :smile:

@@ -24,7 +24,6 @@ You should only make a PR if all of the following apply:
 
 - You've discussed the changes via an `Issue`, `Discussion` or you've contacted the [repository owner](https://github.com/DashTheDev) directly. This is to ensure that changes aren't made out of scope and aren't already being worked on.
 - It is not a double up of a PR that already exists.
-- You have checked the [project workload](https://github.com/users/DashTheDev/projects/3) to see if the related changes aren't already planned or in progress by someone else.
 
 ## Important notes
 Whether you're contributing with an issue, discussion or PR, please do your best to format your content with [markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax). Doing so will make everyone's life easier!
