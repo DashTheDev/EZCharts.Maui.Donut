@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+    - name: Requests & proposals
+      url: https://github.com/DashTheDev/EZCharts.Maui.Donut/discussions/categories/requests-proposals
+      about: Want something added or have some great ideas? Search for or start a new discussion!

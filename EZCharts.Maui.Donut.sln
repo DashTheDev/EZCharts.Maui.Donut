@@ -21,6 +21,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EZCharts.Maui.Donut", "EZCh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EZCharts.Maui.Donut.Samples", "EZCharts.Maui.Donut.Samples\EZCharts.Maui.Donut.Samples.csproj", "{3E168586-6FD4-49A8-ABCE-857561B7CCA7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1CB95A8E-B36F-4F9D-83CD-4BA4CAD0E6D4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CODE_OF_CONDUCT.md = .github\CODE_OF_CONDUCT.md
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +49,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F4FE4592-8236-48E1-BAC8-B2294FE11E3B} = {A53374D6-1C72-478F-9876-F9D170C52793}
+		{1CB95A8E-B36F-4F9D-83CD-4BA4CAD0E6D4} = {A53374D6-1C72-478F-9876-F9D170C52793}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0682CC5-7A84-4BE6-999A-027BBF9B7DA2}
