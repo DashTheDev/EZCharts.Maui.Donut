@@ -18,7 +18,7 @@ public partial class SamplePage : ContentPage
         if (e.Entry is TestResult testResult)
         {
             value = testResult.Score;
-            label = testResult.Category;
+            label = testResult.CategoryDisplay;
         }
         else if (e.Entry is DataEntry dataEntry)
         {

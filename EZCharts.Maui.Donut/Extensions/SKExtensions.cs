@@ -1,4 +1,4 @@
-﻿using EZCharts.Maui.Donut.Helpers;
+﻿using EZCharts.Maui.Donut.Utility;
 
 namespace SkiaSharp;
 

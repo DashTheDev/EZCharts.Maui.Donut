@@ -3,12 +3,17 @@
     x:Class="EZCharts.Maui.Donut.Samples.Views.SamplePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:EZCharts.Maui.Donut.Samples.Converters"
     xmlns:donut="http://schemas.dashthedev.com/ez-charts/maui/donut"
+    xmlns:m="clr-namespace:EZCharts.Maui.Donut.Samples.Models"
     xmlns:vm="clr-namespace:EZCharts.Maui.Donut.Samples.ViewModels"
     x:DataType="vm:SampleViewModel"
     Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
+        <c:ResultCategoryIconConverter x:Key="ResultCategoryIconConverter" />
+        <c:ResultCategoryImageConverter x:Key="ResultCategoryImageConverter" />
+
         <x:Array x:Key="ChartColors" Type="{x:Type Color}">
             <Color>#9e0142</Color>
             <Color>#d53e4f</Color>
@@ -40,10 +45,20 @@
             EntryClicked="OnEntryClicked"
             EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
-            EntryLabelPath="Category"
+            EntryLabelPath="CategoryDisplay"
             EntryValuePath="Score"
             LabelStyle="Outside"
-            LabelUseAutoFontColor="True" />
+            LabelUseAutoFontColor="True">
+            <donut:DonutChartView.EntryIconTemplate>
+                <DataTemplate x:DataType="m:TestResult">
+                    <FileImageSource File="{Binding Category, Converter={StaticResource ResultCategoryImageConverter}}" />
+                    <!--<FontImageSource
+                        FontFamily="{Static m:FasIcons.FontKey}"
+                        Glyph="{Binding Category, Converter={StaticResource ResultCategoryIconConverter}}"
+                        Size="10" />-->
+                </DataTemplate>
+            </donut:DonutChartView.EntryIconTemplate>
+        </donut:DonutChartView>
 
         <!--  Example without MVVM Entries source  -->
         <!--<donut:DonutChartView

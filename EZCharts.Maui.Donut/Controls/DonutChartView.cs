@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
-using EZCharts.Maui.Donut.Helpers;
+using EZCharts.Maui.Donut.Utility;
 using EZCharts.Maui.Donut.Models;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
@@ -118,6 +118,23 @@ public class DonutChartView : SKCanvasView, IPadding
     {
         get => (string)GetValue(EntryLabelPathProperty);
         set => SetValue(EntryLabelPathProperty, value);
+    }
+
+    /// <summary>Bindable property for <see cref="EntryIconTemplate"/>.</summary>
+    public static readonly BindableProperty EntryIconTemplateProperty = BindableProperty.Create(
+        nameof(EntryIconTemplate),
+        typeof(DataTemplate),
+        typeof(DonutChartView));
+
+    /// <summary>
+    /// Gets or sets the template to be used for rendering the icon for each entry.<br/>
+    /// It is expected that the templated view is/or is derived from an <see cref="ImageSource"/>.<br/><br/>
+    /// This is a bindable property which defaults to <b><see langword="null"/></b>.
+    /// </summary>
+    public DataTemplate? EntryIconTemplate
+    {
+        get => (DataTemplate?)GetValue(EntryIconTemplateProperty);
+        set => SetValue(EntryIconTemplateProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="EntryColors"/>.</summary>
@@ -470,6 +487,7 @@ public class DonutChartView : SKCanvasView, IPadding
         RenderBackground(canvas);
         RenderValues(canvas);
         RenderLabels(canvas);
+        RenderIcons(canvas);
     }
 
     private SKRect CreateChartBounds()
@@ -607,6 +625,57 @@ public class DonutChartView : SKCanvasView, IPadding
             }
 
             canvas.DrawText(entry.Label, sectorMidpoint, textPaint);
+        }
+    }
+
+    // NOTE: Not a massive fan of this approach with the template and expected ImageSource
+    // TODO: Setup FileImageSource and FontImageSource samples
+    // TODO: Mega cleanup and optimisation
+    // TODO: Scale bindable property
+    // TODO: Handle can't load image exceptions
+    private void RenderIcons(SKCanvas canvas)
+    {
+        if (_internalEntries.Length == 0 || EntryIconTemplate is null)
+        {
+            return;
+        }
+
+        if (this.FindMauiContext() is not IMauiContext mauiContext)
+        {
+            return;
+        }
+
+        foreach (InternalDataEntry entry in _internalEntries.Where(e => e.SectorPath is not null))
+        {
+            if (EntryIconTemplate.CreateContent() is not ImageSource iconImageSource)
+            {
+                break;
+            }
+
+            SKPoint sectorMidpoint = SKGeometry.GetSectorMidpoint(entry.SectorPath!, ChartOuterRadius - ((ChartOuterRadius - ChartInnerRadius) / 2));
+
+            iconImageSource.BindingContext = entry.OriginalEntry;
+            iconImageSource.LoadImage(mauiContext, result =>
+            {
+                if (result is null)
+                {
+                    return;
+                }
+
+                SKBitmap? skBitmap = SKBitmaps.ConvertToSKBitmap(result.Value);
+
+                if (skBitmap is null)
+                {
+                    return;
+                }
+
+                //canvas.DrawCircle(sectorMidpoint, 10, SKPaints.Fill(Colors.Red));
+
+                SKBitmap scaledBitmap = SKBitmaps.Scale(skBitmap, 0.1f);
+                sectorMidpoint.X -= scaledBitmap.Width / 2;
+                sectorMidpoint.Y -= scaledBitmap.Height / 2;
+                canvas.DrawBitmap(scaledBitmap, sectorMidpoint);
+            });
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using SkiaSharp.Views.Maui;
 using SkiaSharp;
 
-namespace EZCharts.Maui.Donut.Helpers;
+namespace EZCharts.Maui.Donut.Utility;
 
 internal static class SKPaints
 {

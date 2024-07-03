@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using EZCharts.Maui.Donut.Samples.Models;
 using EZCharts.Maui.Donut.Samples.Services;
 using EZCharts.Maui.Donut.Samples.ViewModels;
 using EZCharts.Maui.Donut.Samples.Views;
@@ -21,6 +22,7 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont(FasIcons.FontFile, FasIcons.FontKey);
             });
 
         #if DEBUG

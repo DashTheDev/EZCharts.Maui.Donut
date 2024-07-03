@@ -1,7 +1,7 @@
 ﻿using EZCharts.Maui.Donut.Models;
 using SkiaSharp;
 
-namespace EZCharts.Maui.Donut.Helpers;
+namespace EZCharts.Maui.Donut.Utility;
 
 // Original version: https://github.com/mono/SkiaSharp/blob/322baee72a018a889e85fc48b42cde9764797dae/source/SkiaSharp.Extended/SkiaSharp.Extended.Shared/SKGeometry.cs#L19-L79
 internal static class SKGeometry

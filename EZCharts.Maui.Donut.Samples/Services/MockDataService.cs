@@ -9,20 +9,7 @@ internal class MockDataService
     private readonly float _minValue = 15f;
     private readonly float _maxValue = 200f;
     private readonly int _minResultCount = 1;
-    private readonly int _maxResultCount = 10;
-    private readonly string[] _categories = 
-    [
-        "English",
-        "Mathematics",
-        "Science",
-        "Geography",
-        "History",
-        "Technology",
-        "Sports",
-        "Music",
-        "Drama",
-        "Languages"
-    ];
+    private readonly ResultCategory[] _categories = Enum.GetValues<ResultCategory>();
 
     #endregion
 
@@ -31,7 +18,7 @@ internal class MockDataService
     internal TestResult[] GetTestResults()
     {
         Random random = new();
-        int resultCount = random.Next(_minResultCount, _maxResultCount);
+        int resultCount = random.Next(_minResultCount, _categories.Length);
         List<TestResult> testResults = [];
 
         for (int i = 0; i < resultCount; i++)

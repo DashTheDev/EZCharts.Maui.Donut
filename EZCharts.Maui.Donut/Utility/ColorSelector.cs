@@ -1,4 +1,4 @@
-﻿namespace EZCharts.Maui.Donut.Helpers;
+﻿namespace EZCharts.Maui.Donut.Utility;
 
 internal class ColorSelector(Color[] colors)
 {

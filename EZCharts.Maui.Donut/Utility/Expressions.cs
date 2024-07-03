@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace EZCharts.Maui.Donut.Helpers;
+namespace EZCharts.Maui.Donut.Utility;
 
 internal static class Expressions
 {

@@ -1,7 +1,8 @@
 ﻿namespace EZCharts.Maui.Donut.Samples.Models;
 
-internal class TestResult
+public class TestResult
 {
-    internal float Score { get; set; }
-    internal string Category { get; set; } = string.Empty;
+    public float Score { get; set; }
+    public ResultCategory Category { get; set; }
+    public string CategoryDisplay => Category.ToString();
 }
