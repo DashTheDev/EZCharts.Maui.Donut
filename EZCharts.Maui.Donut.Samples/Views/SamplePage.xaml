@@ -45,7 +45,6 @@
             EntryClicked="OnEntryClicked"
             EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
-            EntryImageScale="0.1"
             EntryLabelPath="CategoryDisplay"
             EntryValuePath="Score"
             LabelStyle="Outside"
