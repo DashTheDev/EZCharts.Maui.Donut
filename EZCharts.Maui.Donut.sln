@@ -30,8 +30,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1CB95A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Issues", "Issues", "{D8F0DD70-4B6B-4827-BA0F-6D4759E82548}"
 	ProjectSection(SolutionItems) = preProject
-		.github\ISSUE_TEMPLATE\config.yml = .github\ISSUE_TEMPLATE\config.yml
 		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\ISSUE_TEMPLATE\config.yml = .github\ISSUE_TEMPLATE\config.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{D488D0FE-380D-4651-AB99-47A3C58328AB}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\README.md = Docs\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{D45444B9-5527-43CE-8A1B-BF37D8230F20}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Reference\DataEntry.md = Docs\Reference\DataEntry.md
+		Docs\Reference\DonutChartView.md = Docs\Reference\DonutChartView.md
+		Docs\Reference\EntryClickEventArgs.md = Docs\Reference\EntryClickEventArgs.md
+		Docs\Reference\LabelStyle.md = Docs\Reference\LabelStyle.md
+		Docs\Reference\README.md = Docs\Reference\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B45E2321-2EAD-47F8-9EA0-8ED63E5A2B2B}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Samples\README.md = Docs\Samples\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FAQ", "FAQ", "{816B3877-AE4B-4C30-AB71-4EDE4C6DAF97}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\FAQ\README.md = Docs\FAQ\README.md
 	EndProjectSection
 EndProject
 Global
@@ -58,6 +82,10 @@ Global
 		{F4FE4592-8236-48E1-BAC8-B2294FE11E3B} = {A53374D6-1C72-478F-9876-F9D170C52793}
 		{1CB95A8E-B36F-4F9D-83CD-4BA4CAD0E6D4} = {A53374D6-1C72-478F-9876-F9D170C52793}
 		{D8F0DD70-4B6B-4827-BA0F-6D4759E82548} = {1CB95A8E-B36F-4F9D-83CD-4BA4CAD0E6D4}
+		{D488D0FE-380D-4651-AB99-47A3C58328AB} = {A53374D6-1C72-478F-9876-F9D170C52793}
+		{D45444B9-5527-43CE-8A1B-BF37D8230F20} = {D488D0FE-380D-4651-AB99-47A3C58328AB}
+		{B45E2321-2EAD-47F8-9EA0-8ED63E5A2B2B} = {D488D0FE-380D-4651-AB99-47A3C58328AB}
+		{816B3877-AE4B-4C30-AB71-4EDE4C6DAF97} = {D488D0FE-380D-4651-AB99-47A3C58328AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F0682CC5-7A84-4BE6-999A-027BBF9B7DA2}

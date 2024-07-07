@@ -365,7 +365,7 @@ public class DonutChartView : SKCanvasView, IPadding
         propertyChanged: OnVisualPropertyChanged);
 
     /// <summary>
-    /// Gets or sets the spacing between each chart label.<br/>
+    /// Gets or sets the vertical spacing between each chart label.<br/>
     /// This value is only applied when <c>LabelStyle</c> is set to <b><see cref="LabelStyle.Key"/></b>.<br/><br/>
     /// This is a bindable property which defaults to <c>10f</c>.
     /// </summary>

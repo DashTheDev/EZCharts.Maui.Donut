@@ -96,7 +96,7 @@ More detailed samples and documentation coming soon!
     </donut:DonutChartView>
     ```
 
-5. Customise to your liking! Options and samples can be found in the [documentation](/) (coming soon).
+5. Customise to your liking! Options and samples can be found in the [documentation](https://github.com/DashTheDev/EZCharts.Maui.Donut/blob/master/Docs/README.md).
 
 ## 🤝 Contributing
 I work full-time and may not have time to keep things up to date. So if there's something you want to change, then make some contributions! Please read the [contribution guide](https://github.com/DashTheDev/EZCharts.Maui.Donut/blob/master/.github/CONTRIBUTING.md) on how to get started.

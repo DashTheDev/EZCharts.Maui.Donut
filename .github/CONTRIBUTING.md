@@ -16,7 +16,7 @@ You should open a discussion if all of the following apply:
 
 - Opening an issue was not valid/appropriate.
 - It is not a double up of a discussion that already exists.
-- You want to discuss anything about the project, propose features or talk about certain issues.
+- You want to discuss anything about the project, ask questions, propose features or talk about certain issues.
 - You're willing to keep the discussion on track (day to day conversations should be held in private).
 
 ## Pull requests
