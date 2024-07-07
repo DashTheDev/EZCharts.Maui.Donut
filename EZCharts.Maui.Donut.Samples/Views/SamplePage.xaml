@@ -45,6 +45,7 @@
             EntryClicked="OnEntryClicked"
             EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
+            EntryImageScale="0.1"
             EntryLabelPath="CategoryDisplay"
             EntryValuePath="Score"
             LabelStyle="Outside"
@@ -52,10 +53,6 @@
             <donut:DonutChartView.EntryIconTemplate>
                 <DataTemplate x:DataType="m:TestResult">
                     <FileImageSource File="{Binding Category, Converter={StaticResource ResultCategoryImageConverter}}" />
-                    <!--<FontImageSource
-                        FontFamily="{Static m:FasIcons.FontKey}"
-                        Glyph="{Binding Category, Converter={StaticResource ResultCategoryIconConverter}}"
-                        Size="10" />-->
                 </DataTemplate>
             </donut:DonutChartView.EntryIconTemplate>
         </donut:DonutChartView>

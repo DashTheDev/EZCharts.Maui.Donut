@@ -1,5 +1,4 @@
-﻿using Microsoft.Graphics.Canvas.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 using SkiaSharp;
 using Windows.Storage.Streams;
 

@@ -4,6 +4,7 @@ namespace EZCharts.Maui.Donut;
 
 internal static class Constants
 {
+    internal const float DefaultEntryImageScale = 0.1f;
     internal static readonly Thickness DefaultPadding = new(10);
     internal const float DefaultChartRotationDegrees = 90f;
     internal const float DefaultChartOuterRadius = 250f;   
