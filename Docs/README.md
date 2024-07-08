@@ -5,5 +5,5 @@ These docs are your one stop shop for everything you'll need to know about EZCha
 
 ## Links
 - [API Reference](Reference/README.md)
-- [Samples](Samples/README.md)
+- [Examples](Examples/README.md)
 - [FAQ](FAQ/README.md)

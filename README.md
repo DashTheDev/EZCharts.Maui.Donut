@@ -12,7 +12,7 @@ The goal is to provide developers with a highly customizable, efficient, and vis
 ## 🖼️ Samples
 A [sample project](https://github.com/DashTheDev/EZCharts.Maui.Donut/tree/master/EZCharts.Maui.Donut.Samples) can be found in the repository where you can dive deeper into setup, customisation and how to use the library in a typical MAUI application. There are samples for MVVM, code behind and XAML setups.
 
-More detailed samples and documentation coming soon!
+If you want more specific examples or code snippets, check out the [examples documentation](https://github.com/DashTheDev/EZCharts.Maui.Donut/tree/master/Docs/Examples)!
 
 ![Sample Animation](https://raw.githubusercontent.com/DashTheDev/EZCharts.Maui.Donut/master/Media/Sample.gif)
 

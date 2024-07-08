@@ -15,6 +15,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Media", "Media", "{F4FE4592-8236-48E1-BAC8-B2294FE11E3B}"
 	ProjectSection(SolutionItems) = preProject
 		Media\Icon.png = Media\Icon.png
+		Media\EntryImages-1.png = Media\EntryImages-1.png
+		Media\EntryImages-2.png = Media\EntryImages-2.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EZCharts.Maui.Donut", "EZCharts.Maui.Donut\EZCharts.Maui.Donut.csproj", "{179B7EC9-C912-4F1E-8B49-098663FA22F5}"
@@ -48,9 +50,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{
 		Docs\Reference\README.md = Docs\Reference\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B45E2321-2EAD-47F8-9EA0-8ED63E5A2B2B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B45E2321-2EAD-47F8-9EA0-8ED63E5A2B2B}"
 	ProjectSection(SolutionItems) = preProject
-		Docs\Samples\README.md = Docs\Samples\README.md
+		Docs\Examples\EntryImages.md = Docs\Examples\EntryImages.md
+		Docs\Examples\README.md = Docs\Examples\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FAQ", "FAQ", "{816B3877-AE4B-4C30-AB71-4EDE4C6DAF97}"
