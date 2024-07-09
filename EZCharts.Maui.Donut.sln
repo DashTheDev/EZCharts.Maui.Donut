@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Media", "Media", "{F4FE4592
 		Media\Icon.png = Media\Icon.png
 		Media\EntryImages-1.png = Media\EntryImages-1.png
 		Media\EntryImages-2.png = Media\EntryImages-2.png
+		Media\EntryColors-1.png = Media\EntryColors-1.png
+		Media\EntryColors-2.png = Media\EntryColors-2.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EZCharts.Maui.Donut", "EZCharts.Maui.Donut\EZCharts.Maui.Donut.csproj", "{179B7EC9-C912-4F1E-8B49-098663FA22F5}"
@@ -54,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B4
 	ProjectSection(SolutionItems) = preProject
 		Docs\Examples\EntryImages.md = Docs\Examples\EntryImages.md
 		Docs\Examples\README.md = Docs\Examples\README.md
+		Docs\Examples\EntryColors.md = Docs\Examples\EntryColors.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FAQ", "FAQ", "{816B3877-AE4B-4C30-AB71-4EDE4C6DAF97}"

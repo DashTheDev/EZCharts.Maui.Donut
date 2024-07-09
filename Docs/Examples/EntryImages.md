@@ -1,4 +1,4 @@
-﻿# [⮪](../README.md) Setting Entry Images
+﻿# [⮪](README.md) Setting Entry Images
 Once you've [setup](../../README.md#-setting-up) your [`DonutChartView`](../Reference/DonutChartView.md) there's a property called [`EntryIconTemplate`](../Reference/DonutChartView.md) that you can populate to render icons for each entry. This property expects a [`DataTemplate`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.maui.controls.datatemplate?view=net-maui-8.0) that creates a [`FileImageSource`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.maui.controls.fileimagesource?view=net-maui-8.0). 
 
 ## Static Image
@@ -15,7 +15,7 @@ So if your MAUI project had an image file called `baseball.png`, to render every
 Which might look something like this:
 
 <img src="../../Media/EntryImages-1.png" alt="Example Image #1" width="75%"/>
-<br/><br/>
+<br/>
 
 > [!NOTE]
 > If your images are rendering too large or too small, set the [`EntryImageScale`](../Reference/DonutChartView.md) on your [`DonutChartView`](../Reference/DonutChartView.md) accordingly.
@@ -38,7 +38,7 @@ In the following example, we bind to a property called `Category` on the `TestRe
 Which might look something like this:
 
 <img src="../../Media/EntryImages-2.png" alt="Example Image #2" width="75%"/>
-<br/><br/>
+<br/>
 
 > [!NOTE]
 > If your images are rendering too large or too small, set the [`EntryImageScale`](../Reference/DonutChartView.md) on your [`DonutChartView`](../Reference/DonutChartView.md) accordingly.
