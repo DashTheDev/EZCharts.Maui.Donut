@@ -4,6 +4,7 @@ Once you've [setup](../../README.md#-setting-up) your [`DonutChartView`](../Refe
 ## Static Image
 So if your MAUI project had an image file called `baseball.png`, to render every entry with that image you'd populate the property as follows:
 
+### XAML
 ```xaml
 <donut:DonutChartView.EntryIconTemplate>
     <DataTemplate>
@@ -12,10 +13,19 @@ So if your MAUI project had an image file called `baseball.png`, to render every
 </donut:DonutChartView.EntryIconTemplate>
 ```
 
+### Code-Behind
+```C#
+static object LoadEntryIcon()
+{
+    return ImageSource.FromFile("baseball.png");
+}
+
+MyChartView.EntryIconTemplate = new DataTemplate(LoadEntryIcon);
+```
+
 Which might look something like this:
 
 <img src="../../Media/EntryImages-1.png" alt="Example Image #1" width="75%"/>
-<br/>
 
 > [!NOTE]
 > If your images are rendering too large or too small, set the [`EntryImageScale`](../Reference/DonutChartView.md) on your [`DonutChartView`](../Reference/DonutChartView.md) accordingly.
@@ -27,6 +37,7 @@ Say your [`EntriesSource`](../Reference/DonutChartView.md) entries are of type `
 
 In the following example, we bind to a property called `Category` on the `TestResult` model which is an [`enum`](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/enum). Then we use a [binding value converter](https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/data-binding/converters?view=net-maui-8.0) to convert the `TestResult`'s `Category` to the image file we want to display.
 
+### XAML
 ```xaml
 <donut:DonutChartView.EntryIconTemplate>
     <DataTemplate x:DataType="m:TestResult">
@@ -35,10 +46,25 @@ In the following example, we bind to a property called `Category` on the `TestRe
 </donut:DonutChartView.EntryIconTemplate>
 ```
 
+### Code-Behind
+```C#
+static object LoadEntryIcon()
+{
+    FileImageSource imageSource = new();
+    imageSource.SetBinding(FileImageSource.FileProperty,
+        new Binding(
+            path: nameof(TestResult.Category),
+            converter: new ResultCategoryImageConverter())
+        );
+    return imageSource;
+}
+
+MyChartView.EntryIconTemplate = new DataTemplate(LoadEntryIcon);
+```
+
 Which might look something like this:
 
 <img src="../../Media/EntryImages-2.png" alt="Example Image #2" width="75%"/>
-<br/>
 
 > [!NOTE]
 > If your images are rendering too large or too small, set the [`EntryImageScale`](../Reference/DonutChartView.md) on your [`DonutChartView`](../Reference/DonutChartView.md) accordingly.

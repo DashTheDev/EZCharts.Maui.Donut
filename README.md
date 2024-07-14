@@ -40,51 +40,24 @@ If you want more specific examples or code snippets, check out the [examples doc
     }
     ```
 
-3. Add the `xmlns` namespace and `DonutChartView` to your XAML view. 
+3. Add the [`DonutChartView`](../Reference/DonutChartView.md) to your view.
 
+    ### XAML
     ```xaml
     <YourView xmlns:donut="http://schemas.dashthedev.com/ez-charts/maui/donut">
         <donut:DonutChartView />
     </YourView>
     ```
 
-4. Add entry models (your own or our generic class) via binding, code-behind or XAML. Your choice!
-
-    #### Binding
-    ```xaml
-    <donut:DonutChartView
-        EntriesSource="{Binding TestResults}"
-        EntryLabelPath="Category"
-        EntryValuePath="Score" />
+    ### Code-Behind
+    ```C#
+    DonutChartView donutChartView = new();
+    Content = donutChartView;
     ```
 
-    #### Code-behind
-    ```xaml
-    <donut:DonutChartView x:Name="MyChartView" />
-    ```
-    
-    ```cs
-    public SamplePage()
-    {
-        InitializeComponent();
+4. Add entry models (your own or our generic class) to display data.
 
-        MyChartView.EntriesSource = new DataEntry[]
-        {
-            new()
-            {
-                Value = 105,
-                Label = "Pencils Owned"
-            },
-            new()
-            {
-                Value = 234,
-                Label = "Pens Owned"
-            },
-        };
-    }
-    ```
-
-    #### XAML
+    ### XAML
     ```xaml
     <donut:DonutChartView>
         <x:Array Type="{x:Type donut:DataEntry}">
@@ -94,6 +67,39 @@ If you want more specific examples or code snippets, check out the [examples doc
             <donut:DataEntry Label="Science" Value="50" />
         </x:Array>
     </donut:DonutChartView>
+    ```
+
+    ### XAML (MVVM)
+    ```xaml
+    <donut:DonutChartView
+        EntriesSource="{Binding TestResults}"
+        EntryLabelPath="Category"
+        EntryValuePath="Score" />
+    ```
+
+    ### Code-Behind
+    ```C#
+    donutChartView.EntriesSource = new DataEntry[]
+    {
+        new()
+        {
+            Value = 105,
+            Label = "Pencils Owned"
+        },
+        new()
+        {
+            Value = 234,
+            Label = "Pens Owned"
+        },
+    };
+    ```
+
+    ### Code-Behind (MVVM)
+    ```C#
+    IEnumerable testResults = myService.GetTestResults();
+    donutChartView.EntriesSource = testResults;
+    donutChartView.EntryLabelPath = "Category";
+    donutChartView.EntryValuePath = "Score";
     ```
 
 5. Customise to your liking! Options and samples can be found in the [documentation](https://github.com/DashTheDev/EZCharts.Maui.Donut/blob/master/Docs/README.md).
