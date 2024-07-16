@@ -6,6 +6,7 @@ namespace EZCharts.Maui.Donut.Utility;
 // Original version: https://github.com/mono/SkiaSharp/blob/322baee72a018a889e85fc48b42cde9764797dae/source/SkiaSharp.Extended/SkiaSharp.Extended.Shared/SKGeometry.cs#L19-L79
 internal static class SKGeometry
 {
+    // TODO: Iron out spacing logic. Some unexpected results at higher spacings.
     internal static SKSectorPath CreateSectorPath(
         float centerX,
         float centerY,
@@ -13,17 +14,16 @@ internal static class SKGeometry
         float endPercentage,
         float outerRadius,
         float innerRadius,
-        float rotationDegrees)
+        float rotationDegrees,
+        float spacing)
     {
         bool isFullCircle = endPercentage - startPercentage == 1;
-        float startAngle = GetDegrees(startPercentage, rotationDegrees);
-        float endAngle = GetDegrees(endPercentage, rotationDegrees);
-        float sweepAngle = endAngle - startAngle;
+
+        float startAngle = GetDegreesFromPercentage(startPercentage, rotationDegrees);
+        float endAngle = GetDegreesFromPercentage(endPercentage, rotationDegrees);
 
         SKRect outerRect = GetRadiusRect(centerX, centerY, outerRadius);
         SKRect innerRect = GetRadiusRect(centerX, centerY, innerRadius);
-        SKPoint outerStartPoint = GetCirclePoint(centerX, centerY, outerRadius, GetRadians(startAngle));
-        SKPoint innerEndPoint = GetCirclePoint(centerX, centerY, innerRadius, GetRadians(endAngle));
 
         SKSectorPath path = new()
         {
@@ -34,25 +34,32 @@ internal static class SKGeometry
             RotationDegrees = rotationDegrees
         };
 
-        path.MoveTo(outerStartPoint);
-
         if (isFullCircle)
         {
             // NOTE: To get SkiaSharp to draw a full circle with Arcs, we have to break down into two half arcs.
-            float middleAngle = GetDegrees(0.5f, rotationDegrees);
-            float halvedSweepAngle = sweepAngle.Halved();
+            float middleAngle = GetDegreesFromPercentage(0.5f, rotationDegrees);
+            float sweepAngle = (endAngle - startAngle) / 2;
+            SKPoint innerEndPoint = GetCirclePoint(centerX, centerY, innerRadius, GetRadians(endAngle));
 
-            path.ArcTo(outerRect, startAngle, halvedSweepAngle, false);
-            path.ArcTo(outerRect, middleAngle, halvedSweepAngle, false);
+            path.ArcTo(outerRect, startAngle, sweepAngle, false);
+            path.ArcTo(outerRect, middleAngle, sweepAngle, false);
             path.LineTo(innerEndPoint);
-            path.ArcTo(innerRect, endAngle, -halvedSweepAngle, false);
-            path.ArcTo(innerRect, middleAngle, -halvedSweepAngle, false);
+            path.ArcTo(innerRect, endAngle, -sweepAngle, false);
+            path.ArcTo(innerRect, middleAngle, -sweepAngle, false);
         }
         else
         {
-            path.ArcTo(outerRect, startAngle, sweepAngle, false);
-            path.LineTo(innerEndPoint);
-            path.ArcTo(innerRect, endAngle, -sweepAngle, false);
+            float gapAngleOuter = GetDegreesFromRadians(spacing / outerRadius).Halved();
+            float gapAngleInner = GetDegreesFromRadians(spacing / innerRadius).Halved();
+
+            float outerStartAngle = startAngle + gapAngleOuter;
+            float innerStartAngle = startAngle + gapAngleInner;
+
+            float outerEndAngle = endAngle - gapAngleOuter;
+            float innerEndAngle = endAngle - gapAngleInner;
+
+            path.ArcTo(outerRect, outerStartAngle, outerEndAngle - outerStartAngle, false);
+            path.ArcTo(innerRect, innerEndAngle, -(innerEndAngle - innerStartAngle), false);
         }
 
         path.Close();
@@ -62,7 +69,7 @@ internal static class SKGeometry
     internal static SKPoint GetSectorMidpoint(SKSectorPath sectorPath, float radius)
     {
         float middlePercentage = (sectorPath.StartPercentage + sectorPath.EndPercentage) / 2;
-        float middleAngle = GetDegrees(middlePercentage, sectorPath.RotationDegrees);
+        float middleAngle = GetDegreesFromPercentage(middlePercentage, sectorPath.RotationDegrees);
         float middleRadians = GetRadians(middleAngle);
         return GetCirclePoint(sectorPath.CenterX, sectorPath.CenterY, radius, middleRadians);
     }
@@ -73,8 +80,11 @@ internal static class SKGeometry
             width - padding.Right.ToFloat(),
             height - padding.Bottom.ToFloat());
 
-    private static float GetDegrees(float percentage, float rotationDegrees)
+    private static float GetDegreesFromPercentage(float percentage, float rotationDegrees)
         => percentage * 360 - rotationDegrees;
+
+    private static float GetDegreesFromRadians(float radians)
+        => radians * 180 / MathF.PI;
 
     private static float GetRadians(float degrees)
         => degrees * MathF.PI / 180;

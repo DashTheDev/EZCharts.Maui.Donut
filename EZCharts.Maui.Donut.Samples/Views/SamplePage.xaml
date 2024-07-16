@@ -46,6 +46,7 @@
             EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
             EntryLabelPath="CategoryDisplay"
+            EntrySpacing="10"
             EntryValuePath="Score"
             LabelStyle="Outside"
             LabelUseAutoFontColor="True">

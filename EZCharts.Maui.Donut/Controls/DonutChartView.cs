@@ -174,6 +174,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
         canvas.DrawRect(_canvasBounds, SKPaints.Fill(BackgroundColor));
     }
 
+    // TODO: Update readme gid with spacing example.
     private void RenderValues(SKCanvas canvas)
     {
         if (_internalEntries.Length == 0)
@@ -196,7 +197,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
             float percentageToFill = entry.Value / totalValue;
             float targetPercentageFilled = percentageFilled + percentageToFill;
 
-            entry.SectorPath = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, outerRadius, innerRadius, ChartRotationDegrees);
+            entry.SectorPath = SKGeometry.CreateSectorPath(_chartBounds.MidX, _chartBounds.MidY, percentageFilled, targetPercentageFilled, outerRadius, innerRadius, ChartRotationDegrees, EntrySpacing);
             canvas.DrawPath(entry.SectorPath, paint);
 
             percentageFilled = targetPercentageFilled;
@@ -364,6 +365,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
     // TODO: Rework entry image system, either get away from ImageSource or allow more ImageSource types
     // TODO: Optimise by caching Bitmaps created
     // TODO: Handle can't load image exceptions
+    // TODO: Change all image text to image and not icon.
     private void LoadEntryImage(InternalDataEntry entry)
     {
         if (EntryIconTemplate is null)

@@ -19,6 +19,7 @@ internal static class Defaults
     internal const string EntryValuePath = "Value";
     internal const string EntryLabelPath = "Label";
     internal const float EntryImageScale = 0.1f;
+    internal const float EntrySpacing = 10f;
 
     internal static readonly Color[] ChartColors =
     [

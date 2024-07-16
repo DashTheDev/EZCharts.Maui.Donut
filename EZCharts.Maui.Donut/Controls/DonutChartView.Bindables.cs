@@ -137,6 +137,25 @@ public partial class DonutChartView
         set => SetValue(EntryClickedCommandProperty, value);
     }
 
+    /// <summary>Bindable property for <see cref="EntrySpacing"/>.</summary>
+    public static readonly BindableProperty EntrySpacingProperty = BindableProperty.Create(
+        nameof(EntrySpacing),
+        typeof(float),
+        typeof(DonutChartView),
+        defaultValue: Defaults.EntrySpacing,
+        propertyChanged: OnVisualPropertyChanged);
+
+    /// <summary>
+    /// Gets or sets the spacing between each data entry.<br/>
+    /// <b>NOTE:</b> Currently, anything above <c>20f</c> may produce unexpected results.<br/><br/>
+    /// This is a bindable property which defaults to <c>10f</c>.
+    /// </summary>
+    public float EntrySpacing
+    {
+        get => (float)GetValue(EntrySpacingProperty);
+        set => SetValue(EntrySpacingProperty, value);
+    }
+
     /// <summary>Bindable property for <see cref="Padding"/>.</summary>
     public static readonly BindableProperty PaddingProperty = BindableProperty.Create(
         nameof(Padding),
