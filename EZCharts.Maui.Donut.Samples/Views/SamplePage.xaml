@@ -50,11 +50,11 @@
             EntryValuePath="Score"
             LabelStyle="Outside"
             LabelUseAutoFontColor="True">
-            <donut:DonutChartView.EntryIconTemplate>
+            <donut:DonutChartView.EntryImageTemplate>
                 <DataTemplate x:DataType="m:TestResult">
                     <FileImageSource File="{Binding Category, Converter={StaticResource ResultCategoryImageConverter}}" />
                 </DataTemplate>
-            </donut:DonutChartView.EntryIconTemplate>
+            </donut:DonutChartView.EntryImageTemplate>
         </donut:DonutChartView>
 
         <!--  Example without MVVM Entries source  -->

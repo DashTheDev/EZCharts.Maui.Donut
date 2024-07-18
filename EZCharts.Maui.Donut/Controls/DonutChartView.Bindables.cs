@@ -66,9 +66,9 @@ public partial class DonutChartView
         set => SetValue(EntryLabelPathProperty, value);
     }
 
-    /// <summary>Bindable property for <see cref="EntryIconTemplate"/>.</summary>
-    public static readonly BindableProperty EntryIconTemplateProperty = BindableProperty.Create(
-        nameof(EntryIconTemplate),
+    /// <summary>Bindable property for <see cref="EntryImageTemplate"/>.</summary>
+    public static readonly BindableProperty EntryImageTemplateProperty = BindableProperty.Create(
+        nameof(EntryImageTemplate),
         typeof(DataTemplate),
         typeof(DonutChartView),
         propertyChanged: OnEntryPropertyChanged);
@@ -78,10 +78,10 @@ public partial class DonutChartView
     /// Currently, it is expected that the templated view is a <see cref="FileImageSource"/>.<br/><br/>
     /// This is a bindable property which defaults to <b><see langword="null"/></b>.
     /// </summary>
-    public DataTemplate? EntryIconTemplate
+    public DataTemplate? EntryImageTemplate
     {
-        get => (DataTemplate?)GetValue(EntryIconTemplateProperty);
-        set => SetValue(EntryIconTemplateProperty, value);
+        get => (DataTemplate?)GetValue(EntryImageTemplateProperty);
+        set => SetValue(EntryImageTemplateProperty, value);
     }
 
     /// <summary>Bindable property for <see cref="EntryImageScale"/>.</summary>

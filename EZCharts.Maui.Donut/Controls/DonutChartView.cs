@@ -368,7 +368,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
     // TODO: Change all image text to image and not icon.
     private void LoadEntryImage(InternalDataEntry entry)
     {
-        if (EntryIconTemplate is null)
+        if (EntryImageTemplate is null)
         {
             return;
         }
@@ -378,7 +378,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
             return;
         }
 
-        if (EntryIconTemplate.CreateContent() is not FileImageSource fileImageSource)
+        if (EntryImageTemplate.CreateContent() is not FileImageSource fileImageSource)
         {
             return;
         }
