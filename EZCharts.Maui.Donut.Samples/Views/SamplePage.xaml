@@ -38,15 +38,20 @@
         <donut:DonutChartView
             Grid.Row="1"
             BackgroundColor="#10000000"
-            ChartInnerRadius="250"
-            ChartOuterRadius="400"
+            ChartInnerRadius="{OnPlatform iOS=175,
+                                          Default=250}"
+            ChartOuterRadius="{OnPlatform iOS=325,
+                                          Default=400}"
             ChartRotationDegrees="90"
             EntriesSource="{Binding TestResults}"
             EntryClicked="OnEntryClicked"
             EntryClickedCommand="{Binding EntryClickedCommand}"
             EntryColors="{StaticResource ChartColors}"
+            EntryImageScale="{OnPlatform Android=0.05,
+                                         Default=0.075}"
             EntryLabelPath="CategoryDisplay"
-            EntrySpacing="10"
+            EntrySpacing="{OnIdiom Desktop=10,
+                                   Default=15}"
             EntryValuePath="Score"
             LabelStyle="Outside"
             LabelUseAutoFontColor="True">

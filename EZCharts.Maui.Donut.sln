@@ -57,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B4
 		Docs\Examples\EntryImages.md = Docs\Examples\EntryImages.md
 		Docs\Examples\README.md = Docs\Examples\README.md
 		Docs\Examples\EntryColors.md = Docs\Examples\EntryColors.md
+		Docs\Examples\EntryClicks.md = Docs\Examples\EntryClicks.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FAQ", "FAQ", "{816B3877-AE4B-4C30-AB71-4EDE4C6DAF97}"

@@ -5,4 +5,5 @@ Want to see some code in action? Check the links below to help you get started.
 - [Quick Setup](../../README.md#-setting-up)
 - [Setting Entry Images](EntryImages.md)
 - [Setting Entry Colors](EntryColors.md)
+- [Processing Entry Clicks](EntryClicks.md)
 - [Sample Project](../../EZCharts.Maui.Donut.Samples)

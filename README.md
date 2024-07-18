@@ -96,10 +96,10 @@ If you want more specific examples or code snippets, check out the [examples doc
 
     ### Code-Behind (MVVM)
     ```C#
-    IEnumerable testResults = myService.GetTestResults();
+    IEnumerable<TestResult> testResults = myService.GetTestResults();
     donutChartView.EntriesSource = testResults;
-    donutChartView.EntryLabelPath = "Category";
-    donutChartView.EntryValuePath = "Score";
+    donutChartView.EntryLabelPath = nameof(TestResult.Category);
+    donutChartView.EntryValuePath = nameof(TestResult.Score);
     ```
 
 5. Customise to your liking! Options and samples can be found in the [documentation](https://github.com/DashTheDev/EZCharts.Maui.Donut/blob/master/Docs/README.md).

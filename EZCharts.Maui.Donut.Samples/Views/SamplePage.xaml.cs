@@ -10,7 +10,7 @@ public partial class SamplePage : ContentPage
         InitializeComponent();
     }
 
-    private void OnEntryClicked(object sender, EntryClickEventArgs e)
+    private void OnEntryClicked(object? sender, EntryClickEventArgs e)
     {
         float? value = null;
         string? label = null;
