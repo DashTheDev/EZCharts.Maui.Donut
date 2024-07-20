@@ -206,6 +206,7 @@ public partial class DonutChartView : SKCanvasView, IPadding
 
     // TODO: Add support for changing text positioning
     // TODO: Add support for label template replacements
+    // TODO: Add support for keeping labels on screen if too big
     private void RenderLabels(SKCanvas canvas)
     {
         if (_internalEntries.Length == 0)
@@ -365,7 +366,6 @@ public partial class DonutChartView : SKCanvasView, IPadding
     // TODO: Rework entry image system, either get away from ImageSource or allow more ImageSource types
     // TODO: Optimise by caching Bitmaps created
     // TODO: Handle can't load image exceptions
-    // TODO: Change all image text to image and not icon.
     private void LoadEntryImage(InternalDataEntry entry)
     {
         if (EntryImageTemplate is null)
