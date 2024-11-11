@@ -36,4 +36,3 @@ public partial class SamplePage : ContentPage
         }
     }
 }
-

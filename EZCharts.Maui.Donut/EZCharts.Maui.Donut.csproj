@@ -3,9 +3,10 @@
 	<Import Project="..\common.props" />
 
 	<PropertyGroup>
+		<TargetFrameworks>$(TargetFrameworks);net8.0</TargetFrameworks>
 		<Title>EZCharts.Maui.Donut</Title>
 		<PackageId>EZCharts.Maui.Donut</PackageId>
-		<Version>1.0.0-alpha.3</Version>
+		<Version>1.0.0-alpha.4</Version>
 		<RepositoryUrl>https://github.com/DashTheDev/EZCharts.Maui.Donut</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/DashTheDev/EZCharts.Maui.Donut</PackageProjectUrl>
 		<PackageTags>donut,chart,data,.net,maui,cross-platform,windows,ios,android</PackageTags>
@@ -27,25 +28,31 @@
 	</ItemGroup>
 
 	<!-- Android -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+	<ItemGroup Condition="'$(IsAndroid)' != 'true'">
 		<Compile Remove="**\*.Android.cs" />
 		<None Include="**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
 
 	<!-- iOS -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
+	<ItemGroup Condition="'$(IsIos)' != 'true'">
 		<Compile Remove="**\*.iOS.cs" />
 		<None Include="**\*.iOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
 
 	<!-- Windows -->
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true">
+	<ItemGroup Condition="'$(IsWindows)' != 'true'">
 		<Compile Remove="**\*.Windows.cs" />
 		<None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
+
+	<!-- Default -->
+	<ItemGroup Condition="'$(IsDefault)' != 'true'">
+		<Compile Remove="**\*.Default.cs" />
+		<None Include="**\*.Default.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9" />
 	</ItemGroup>
 
 </Project>
